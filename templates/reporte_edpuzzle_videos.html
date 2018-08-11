@@ -1,0 +1,183 @@
+{% extends 'base.html' %}
+
+{% block titulo %} PRG-Reporte | Reporte Edpuzzle Videos {% endblock %}
+
+{%block contenido%}
+
+<script src="{{ base_url() }}/js/jquery-1.9.1.js"></script>
+{% if error >= 0 %}
+<script>
+    $(document).ready(function() { $('#aviso_error').modal('show'); });
+</script>
+{% endif %}
+
+
+<h3 style="margin-bottom: 30px;">Reporte de datos de Edpuzzle Videos</h3>
+
+<div class="container">
+    {% if pais_default is null and escuela_default is null %}
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="p-3 mb-2 bg-danger text-white">*Debe seleccionar un país y una escuela para realizar las consultas, por favor haga click en el siguiente link para establecer la configuración: <a style="color:gold;" href="{{ path_for('conf_sistema') }}">configurar</a> </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="pais-default">País</label>
+                <input type="text" class="form-control" id="pais-default" value="{{ pais_default }}" readonly>
+            </div>   
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="escuela-default">Escuela</label>
+                <input type="text" class="form-control" id="escuela-default" value="{{ escuela_default }}" readonly>
+            </div>   
+        </div>
+    </div>
+    {% endif %}
+    <div class="row">
+        <div class="col-sm-12">
+            <form action="{{ path_for('busqueda_sesiones_video') }}" method="post" id="form-sesiones">
+                <div class="form-group">
+                    <label for="sesion">Seleccione la fecha de la sesión</label>
+                    <select class="form-control" id="sesiones" class="sesiones" name="sesiones" {% if pais_default is null %} disabled {% endif %}>
+                          <option value="-1" id="-1">Seleccione una opción</option>
+                          {% for clave, valor  in sesiones %}
+                            {% if clave == index %}
+                                <option value="{{clave}}" name="{{clave}}" id="opt-{{clave}}" class="opcion" selected>{{ valor }}</option>
+                            {% else %}
+                                <option value="{{clave}}" name="{{clave}}" id="opt-{{clave}}" class="opcion">{{ valor }}</option>
+                            {% endif %}
+                          {% endfor %}
+                    </select>
+                </div>
+                <input type="text" name="id_sesion" id="id_sesion" value="" hidden>
+            </form>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12" style="margin-bottom: 30px;">
+            
+            {% if matriz|length > 0%}
+                <form action="{{ path_for('excel_video') }}" method="post">
+                    <button type="submit" class="btn btn-primary">Generar Excel</button>
+                    <input type="text" name="id_sesion_1" id="id_sesion_1" value="{{ index }}" hidden>
+                </form>
+            {% endif %}
+        </div>
+    </div>
+    {% if matriz|length > 0 %}
+        <div class="row">
+            <div class="col-sm-12">
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination">
+                        <li class="page-item"><a class="page-link" href="{{ path_for('paginacion_video',{'id':index, 'pagina':1}) }}"><<</a></li>
+                        {% for valor in 1..cantidad %}
+                            {% if valor == pagina %}
+                                <li class="page-item active"><a class="page-link" href="{{ path_for('paginacion_video',{'id':index, 'pagina':valor}) }}">{{valor}}</a></li>
+                            {% else %}    
+                                <li class="page-item"><a class="page-link" href="{{ path_for('paginacion_video',{'id':index, 'pagina':valor}) }}">{{valor}}</a></li>
+                            {% endif %}
+                        {% endfor %}
+                        <li class="page-item"><a class="page-link" href="{{ path_for('paginacion_video',{'id':index, 'pagina':cantidad}) }}">>></a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    {% endif %}
+    <div class="row">
+        <div class="col-sm-12" style="overflow:auto;">
+            {% if matriz|length > 0 %}
+                <table class="table table-striped" >
+                    <thead class="thead-inverse">
+                        <tr>
+                        <th>Sección</th>
+                        <th>Nombre</th>
+                        <th>Fecha</th>
+                        <th>Sesión</th>
+                        <th>Obligatorio Acumulado</th>
+                        <th>General Acumulado</th>
+                        <th>Sesión Obligatorio</th>
+                        <th>Sesión General</th>
+                        <th>Acum Target</th>
+                        <th>Sesión Target</th>
+                        <th>Oblig Cump Acum</th>
+                        <th>Oblig Cump Sesion</th>
+                        <th>General Cump Acum</th>
+                        <th>General Cump Sesión</th>
+                        <th>Color Oblig Acum</th>
+                        <th>Color Oblig Sesión</th>
+                        <th>Nivel cumplimiento</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for filas in matriz  %}
+                            <tr>
+                                {% for columna in filas %}
+                                    <th >{{ columna }}</th>
+                                {% endfor %}
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="aviso_error" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">
+                {% if error == 0 %}
+                    Datos guardados
+                {% elseif error == 1 %}
+                    Problemas al cargar datos
+                {% endif %}
+
+            </h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            {% if error == 0 %}
+                <p>Se almaceno la información correctamente.</p>
+            {% elseif error == 1 %}
+                <p>No hay datos almacenados para la fecha seleccionada.</p>            
+            {% endif %}
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+            <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
+        </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // solo firefox
+    // $('.opcion').click(function()
+    // {
+    //     if($(this).attr('id') != -1)
+    //     {
+    //         $('#id_sesion').val($(this).attr('id'));
+    //         $('#form-sesiones').submit();
+    //     }
+    // });
+    // chrome
+    $('#sesiones').change(function() {
+        if($(this).val() != -1)
+        {
+            $('#id_sesion').val('opt-'+$(this).val());
+            // alert('val: '+$('#id_sesion').val());
+            $('#form-sesiones').submit();
+        } 
+    });
+</script>
+
+{% endblock %}

@@ -1,0 +1,165 @@
+{% extends 'base.html' %}
+
+{% block titulo %} PRG-Home {% endblock %}
+
+{%block contenido%} 
+
+<script src="{{ base_url() }}/js/jquery-1.9.1.js"></script>
+{% if error >= 0 %}
+<script>
+    $(document).ready(function() { $('#aviso_error').modal('show'); });
+</script>
+{% endif %}
+
+<h3 style="margin-bottom: 30px;">Configuración del sistema</h3>
+<div class="container">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="p-3 mb-2 bg-danger text-white">*El sistema utilizará el país y la escuela seleccionada para realizar todas las consultas por defecto</div>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-sm-12">
+            <hr>
+            <div class="form">
+                <form action="{{ path_for('busqueda_paises') }}" method="post" id="form-paises">
+                    <div class="form-group">
+                        <label for="paises">Países: </label>
+                        <select  class="form-control" id="paises" class="paises" name="paises">
+                            <option value="-1" id="-1">Seleccione un país</option>
+                            {% for clave, valor  in lista_paises %}
+                                {% if clave == index_pais %}
+                                    <option value="{{clave}}" name="{{clave}}" id="opt-{{clave}}" class="opcion" selected>{{ valor }}</option>
+                                {% else %}
+                                    <option value="{{clave}}" name="{{clave}}" id="opt-{{clave}}" class="opcion">{{ valor }}</option>
+                                {% endif %}
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <input type="text" name="id_pais" id="id_pais" value="" hidden>
+                </form>
+                <!-- /============================================================================= -->
+                <!-- /============================================================================= -->
+                <!-- /============================================================================= -->
+                <form action="{{ path_for('guardar_pais_escuela') }}" method="post" id="form-escuelas">
+                    <div class="form-group">
+                        <label for="escuelas">Escuelas: </label>
+                        <select  class="form-control" id="escuelas" {% if lista_escuelas is null %} disabled {% endif %}>
+                            <option value="-1" id="-1">Seleccione una escuela</option>
+                            {% for clave, valor  in lista_escuelas %}
+                                {% if clave == index_escuela %}
+                                    <option value="{{clave}}" name="{{clave}}" id="opt-{{clave}}" class="opcion" selected>{{ valor }}</option>
+                                {% else %}
+                                    <option value="{{clave}}" name="{{clave}}" id="opt-{{clave}}" class="opcion">{{ valor }}</option>
+                                {% endif %}
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <input type="text" name="id_escuela" id="id_escuela" value="" hidden>
+                </form>
+                <div class="form-group">
+                    <form action="{{ path_for('guardar_info_config') }}" method="post">
+                        <button type="submit" class="btn btn-primary pull-right" {% if index_escuela == -1 %} disabled {% endif %}>Guardar</button>
+                        <button type="button" class="btn btn-secondary pull-right" style="margin-right: 10px;" data-toggle="modal" data-target="#exampleModal">Cargar Data</button>
+                        <input type="text" name="id_info" id="id_info" value="opt-{{ index_pais }}-{{ index_escuela }}" hidden>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>  
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Cargar datos de los países y las escuelas.</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            <form action="{{ path_for('carga_datos_config') }}" method="POST">
+            <!-- <kl   -->
+                <div class="form-group">
+                    <label for="">Id del Fichero(Sección): </label>
+                    <input maxlength="60"  type="text" class="form-control" id="id-seccion" name="id-seccion">
+                    <small id="seccion-ayuda" class="form-text text-muted">El archivo debe existir en su cuenta de Google Drive.</small>
+                </div>
+                <div class="form-group">
+                    <label for="">Nombre de la hoja del fichero de sección: </label>
+                    <input maxlength="30" type="text" class="form-control" id="fichero-seccion-hoja" name="fichero-seccion-hoja">
+                    <small id="seccion-hoja-ayuda" class="form-text text-muted">La hoja debe existe en el fichero de sección.</small>
+                </div>
+                <div class="form-group">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary pull-right">Guardar</button>
+                </div>
+                <!-- -->
+            </form>
+            </div>
+      </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="aviso_error" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">
+              {% if error == 10 %}
+                Exito!
+              {% else %}
+                Error
+              {% endif %}
+          
+            </h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          {% if error == 0 %}
+            <p>Error, campos vacíos.</p>
+          {% elseif error == 1  %}
+            <p>Error, informacion invalida.</p>  
+          {% elseif error == 2  %}
+            <p>Error, problema al conectarse con el servidor de Drive.</p>  
+          {% elseif error == 3  %}
+            <p>Error al conectarse con la base de datos.</p>
+          {% elseif error == 10  %}
+            <p>Datos almacenados correctamente.</p>           
+          {% endif %}
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+          <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
+        </div>
+      </div>
+    </div>
+</div>
+
+<script>
+    $('#paises').change(function() {
+        if($(this).val() != -1)
+        {
+            $('#id_pais').val('opt-'+$(this).val());
+            $('#form-paises').submit();
+        } 
+    });
+
+    $('#escuelas').change(function() {
+        if($(this).val() != -1)
+        {
+            $('#id_escuela').val('opt-'+$(this).val()+'-{{index_pais}}');
+            $('#form-escuelas').submit();
+        } 
+    });
+
+</script>
+
+{% endblock %}

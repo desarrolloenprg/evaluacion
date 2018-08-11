@@ -1,0 +1,241 @@
+/* gris: c7c7c7
+naranja: ff5722 
+rojo: a61c00
+negro 000000
+blanco: ffffff
+gris claro: ededed
+amarillo: ff5722  */
+body 
+{
+    background-image: url("../img/fondo.jpg");
+    background-size: 900px;
+    font-family: 'Lato', sans-serif;
+}
+
+.color-red
+{
+    background-color: #a61c00;
+}
+
+.color-orange
+{
+    background-color: #ff5722;
+}
+
+.text-title
+{
+    color: white;
+    font-size: 4em;
+    overflow-y: hidden;
+    text-align: center;
+    /* font-family: 'Lato', sans-serif; */
+    font-family: 'Roboto', sans-serif;
+}
+
+.color-grey
+{
+    background-color: #ededed;
+}
+
+.text-info-alumno
+{
+    font-size: 2em;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 600;
+    color: black;
+}
+
+.text-red
+{
+    color: #a61c00 !important;
+}
+
+.text-black
+{
+    color: black;
+}
+
+.contenedor-info-semanas
+{
+    margin-top:50px;
+    padding-top: 20px;
+    padding-bottom:20px;
+}
+
+.contendor-resumen
+{
+    background-color: #ff5722 !important;
+    border-radius: 5px;
+    -webkit-box-shadow: 3px 6px 5px 0px rgba(117,117,117,1);
+    -moz-box-shadow: 3px 6px 5px 0px rgba(117,117,117,1);
+    box-shadow: 3px 6px 5px 0px rgba(117,117,117,1);
+    max-height: 50px;
+    max-width: 360px;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.text-resumen
+{
+    font-size: 2em;
+    color:white;
+    text-align: center;
+}
+
+.div-squad
+{
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    overflow-y: hidden;
+    background-color: #cccaca;
+    max-height: 50px;
+    max-width: 700px;
+    border-radius: 5px;
+    -webkit-box-shadow: 3px 6px 5px 0px rgba(117,117,117,1);
+    -moz-box-shadow: 3px 6px 5px 0px rgba(117,117,117,1);
+    box-shadow: 3px 6px 5px 0px rgba(117,117,117,1);
+    
+}
+
+.text-info-leyenda
+{
+    font-size: 1.1em;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 900;
+    color: black;
+}
+
+.contenedor-leyenda
+{
+    padding-top: 8px;
+    padding-left: 10px;
+    padding-right: 80px;
+    background-color: white;
+    max-height: 40px; 
+    overflow: hidden;
+    max-width: 700px;
+}
+
+.leyenda-orange {
+    width: 25px;
+    height: 25px;
+    background-color: #ff5722;
+}
+
+.leyenda-red {
+    width: 25px;
+    height: 25px;
+    background-color: #a61c00;
+}
+
+.btn-red
+{
+    border: none;
+    background-color: #a61c00 !important;
+    border-radius: 5px;
+    -webkit-box-shadow: 3px 6px 5px 0px rgba(117,117,117,1);
+    -moz-box-shadow: 3px 6px 5px 0px rgba(117,117,117,1);
+    box-shadow: 3px 6px 5px 0px rgba(117,117,117,1);
+    width: 310px;
+    font-size: 1.5em;
+    color:white;
+}
+
+.btn-orange
+{
+    border: none;
+    background-color: #ff5722 !important;
+    border-radius: 5px;
+    -webkit-box-shadow: 3px 6px 5px 0px rgba(117,117,117,1);
+    -moz-box-shadow: 3px 6px 5px 0px rgba(117,117,117,1);
+    box-shadow: 3px 6px 5px 0px rgba(117,117,117,1);
+    width: 310px;
+    font-size: 1.5em;
+    color:white;
+}
+
+.text-title-comentario {
+    color: black;
+    font-size: 2em;
+    font-family: 'Roboto', sans-serif;
+    font-weight: bold;
+}
+.marco-orange
+{
+    border:solid;
+    border-width: 2.5px;
+    border-color: #ff5722;
+    padding: 10px;
+    font-size: 1.1em;
+    font-weight: 900;
+    border-radius: 5px;
+    color: #a61c00;
+}
+
+.marco-red
+{
+    border:solid;
+    border-width: 2.5px;
+    border-color: rgb(166, 28, 0);
+    padding: 10px;
+    font-size: 1.1em;
+    font-weight: 900;
+    border-radius: 5px;
+    color: rgb(255, 87, 34);
+}
+
+.pagina-title
+{
+    font-weight: 900;
+    font-size: 3.5em;
+    font-family: 'Roboto', sans-serif;
+    color: white;
+}
+
+.slider {
+    width: 60%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.slick-slide {
+  margin: 0px 20px;
+}
+
+.slick-slide img {
+  width: 100%;
+}
+
+.slick-prev:before,
+.slick-next:before {
+  color: black;
+}
+
+.slick-slide {
+  transition: all ease-in-out .3s;
+  opacity: .2;
+}
+
+.slick-active {
+  opacity: .5;
+}
+
+.slick-current {
+  opacity: 1;
+}
+
+.contenedor-contacto
+{
+    background-color: rgba(255, 99, 71, 0.8);
+    padding: 30px;
+}
+
+.text-contacto
+{
+    font-weight: 900;
+    text-align: center;
+}

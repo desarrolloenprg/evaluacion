@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block titulo %} PRG-Home | Tabla Code {% endblock %}
+
+{%block contenido%} 
+<h3 style="margin-bottom: 30px;">Tabla Code</h3>
+
+<div class="row">
+    <div class="col-md-12" style="overflow:auto;">
+            <table class="table" >
+                    <thead class="thead-inverse">
+                      <tr>
+                        <th>Sección</th>
+                        <th>Nombre</th>
+                        <th>Fecha</th>
+                        <th>Sesión</th>
+                        <th>Obligatorio Acumulado</th>
+                        <th>General Acumulado</th>
+                        <th>Sesión Obligatorio</th>
+                        <th>Sesión General</th>
+                        <th>Acum Target</th>
+                        <th>Sesión Target</th>
+                        <th>Oblig Cump Acum</th>
+                        <th>Oblig Cump Sesion</th>
+                        <th>General Cump Acum</th>
+                        <th>General Cump Sesión</th>
+                        <th>Color Oblig Acum</th>
+                        <th>Color Oblig Sesión</th>
+                        <th>Nivel cumplimiento</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                        {% for filas in matriz  %}
+                            <tr>
+                                {% for columna in filas %}
+                                    <th >{{ columna }}</th>
+                                {% endfor %}
+                            </tr>
+                        {% endfor %}
+                      
+                    </tbody>
+                </table>
+    </div>
+</div>
+  
+{% endblock %}

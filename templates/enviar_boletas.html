@@ -1,0 +1,132 @@
+{% extends 'base.html' %}
+
+{% block titulo %} PRG-Home | Enviar informe de avance {% endblock %}
+
+{%block contenido%} 
+
+<script src="{{ base_url() }}/js/jquery-1.9.1.js"></script>
+
+{% if msg_enviado %}
+
+<script>
+    alert('{{ msg_enviado }}');
+</script>
+
+{% endif %}
+
+
+<h3 style="margin-bottom: 30px;">Enviar Informe de avance</h3>
+
+<div class="container">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="p-3 mb-2 bg-danger text-white">*El sistema enviará por grupos el conjunto de los informes de avance</div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-6">
+            <form action="{{ path_for('busqueda_curso_envio') }}" method="post" id="form-cursos">
+                <div class="form-group">
+                    <label for="cursos">Seleccione un curso</label>
+                    <select class="form-control" id="cursos" class="cursos" name="cursos">
+                            <option value="-1" id="-1" class="opcion-tipo">Seleccione una opción</option>
+                            {% for clave, valor  in cursos %}
+                                {% if clave == index_curso %}
+                                    <option value="{{clave}}" name="{{clave}}" id="opt-{{clave}}" class="opcion-curso" selected>{{ valor }}</option>
+                                {% else %}
+                                    <option value="{{clave}}" name="{{clave}}" id="opt-{{clave}}" class="opcion-curso">{{ valor }}</option>
+                                {% endif %}
+                            {% endfor %}
+                    </select>
+                </div>
+                <input type="text" name="id_curso" id="id_curso" value="" hidden>
+            </form>
+        </div>
+        <div class="col-sm-6">
+            <form action="{{ path_for('busqueda_seccion_envio') }}" method="post" id="form-secciones">
+                <div class="form-group">
+                    <label for="sesion">Seleccione una seccion</label>
+                    <select class="form-control" id="secciones" class="secciones" name="secciones" {% if secciones is null %} disabled {% endif %}>
+                            <option value="-1" id="-1" class="opcion-tipo">Seleccione una opción</option>
+                            {% for clave, valor  in secciones %}
+                                {% if clave == index_seccion %}
+                                    <option value="{{clave}}" name="{{clave}}" id="opt-{{clave}}" class="opcion-seccion" selected>{{ valor }}</option>
+                                {% else %}
+                                    <option value="{{clave}}" name="{{clave}}" id="opt-{{clave}}" class="opcion-seccion">{{ valor }}</option>
+                                {% endif %}
+                            {% endfor %}
+                    </select>
+                </div>
+                <input type="text" name="id_seccion" id="id_seccion" value="" hidden>
+            </form>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="form-group">
+                <label for="sesion">Seleccione un tipo de envío</label>
+                <select class="form-control" id="tipos" class="tipos" name="tipos" {% if tipos is null %} disabled {% endif %}>
+                        <option value="-1" id="-1" class="opcion-tipo">Seleccione una opción</option>
+                        <option value="2" id="2" class="opcion-tipo">Representantes</option>
+                        <option value="3" id="3" class="opcion-tipo">Profesores</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-12">
+            <hr>
+            <form action="{{ path_for('busqueda_tipo_envio') }}" method="POST">
+                <button class="btn btn-primary pull-right" id="btn_envio">Enviar Avance</button>
+                <input type="text" name="id_info_envio" id="id_info_envio" value="" hidden>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    $('.opcion-curso').click(function()
+    {
+        if($(this).attr('id') != '-1')
+        {
+            $('#id_curso').val($(this).attr('id'));
+            $('#form-cursos').submit();
+        }
+        else 
+        {
+            $('#btn_envio').prop('disabled', true);
+        }
+    });
+
+    $('.opcion-seccion').click(function()
+    {
+        if($(this).attr('id') != '-1')
+        {
+            $('#id_seccion').val($(this).attr('id')+'-{{ index_curso }}');
+            $('#form-secciones').submit();
+        }
+        else 
+        {
+            $('#btn_envio').prop('disabled', true);
+        }
+    });
+
+    $('#btn_envio').prop('disabled', true);
+    $('.opcion-tipo').click(function()
+    {
+        if ($(this).attr('id') != '-1')
+        {
+            $('#btn_envio').prop('disabled', false);
+            $('#id_info_envio').val($(this).attr('id')+'-'+'{{ index_curso }}'+'-'+'{{ index_seccion }}');
+        }
+        else 
+        {
+            $('#btn_envio').prop('disabled', true);
+        }
+    });
+
+</script>
+
+{% endblock %}

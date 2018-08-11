@@ -1,0 +1,758 @@
+{% extends 'base.html' %}
+
+{% block titulo %} PRG-Home | Informe de avance {% endblock %}
+
+{%block contenido%} 
+<script src="{{ base_url() }}/js/jquery-1.9.1.js"></script>
+<h3 style="margin-bottom: 30px;">Informe de avance</h3>
+
+<script src="{{ base_url() }}/js/chart.js"></script>
+
+
+<div class="container">
+    <div class="row">
+        <div class="col-sm-6">
+            <form action="{{ path_for('busqueda_curso_boleta') }}" method="post" id="form-cursos">
+                <div class="form-group">
+                    <label for="cursos">Seleccione un curso</label>
+                    <select class="form-control" id="cursos" class="cursos" name="cursos">
+                            <option value="-1" id="-1">Seleccione una opción</option>
+                            {% for clave, valor  in cursos %}
+                                {% if clave == index_curso %}
+                                    <option value="{{clave}}" name="{{clave}}" id="opt-{{clave}}" class="opcion-curso" selected>{{ valor }}</option>
+                                {% else %}
+                                    <option value="{{clave}}" name="{{clave}}" id="opt-{{clave}}" class="opcion-curso">{{ valor }}</option>
+                                {% endif %}
+                            {% endfor %}
+                    </select>
+                </div>
+                <input type="text" name="id_curso" id="id_curso" value="" hidden>
+            </form>
+        </div>
+        <div class="col-sm-6">
+            <form action="{{ path_for('busqueda_seccion_boleta') }}" method="post" id="form-secciones">
+                <div class="form-group">
+                    <label for="sesion">Seleccione una seccion</label>
+                    <select class="form-control" id="secciones" class="secciones" name="secciones" {% if secciones is null %} disabled {% endif %}>
+                            <option value="-1" id="-1">Seleccione una opción</option>
+                            {% for clave, valor  in secciones %}
+                                {% if clave == index_seccion %}
+                                    <option value="{{clave}}" name="{{clave}}" id="opt-{{clave}}" class="opcion-seccion" selected>{{ valor }}</option>
+                                {% else %}
+                                    <option value="{{clave}}" name="{{clave}}" id="opt-{{clave}}" class="opcion-seccion">{{ valor }}</option>
+                                {% endif %}
+                            {% endfor %}
+                    </select>
+                </div>
+                <input type="text" name="id_seccion" id="id_seccion" value="" hidden>
+            </form>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-6">
+            <form action="{{ path_for('busqueda_alumno_boleta') }}" method="post" id="form-alumnos">
+                <div class="form-group">
+                    <label for="alumnos">Seleccione el nombre un alumno</label>
+                    <select class="form-control" id="alumnos" class="alumnos" name="alumnos" {% if alumnos is null %} disabled {% endif %}>
+                            <option value="-1" id="-1">Seleccione una opción</option>
+                            {% for clave, valor  in alumnos %}
+                            {% if clave == index_alumno %}
+                                <option value="{{clave}}" name="{{clave}}" id="opt-{{clave}}" class="opcion-alumno" selected>{{ valor }}</option>
+                            {% else %}
+                                <option value="{{clave}}" name="{{clave}}" id="opt-{{clave}}" class="opcion-alumno">{{ valor }}</option>
+                            {% endif %}
+                            {% endfor %}
+                    </select>
+                </div>
+                <input type="text" name="id_alumno" id="id_alumno" value="" hidden>
+            </form>
+        </div>
+        <div class="col-sm-6">
+            <form action="{{ path_for('busqueda_boleta_proyectos') }}" method="post" id="form-proyectos">
+                <div class="form-group">
+                    <label for="sesion">Seleccione el proyecto</label>
+                    <select class="form-control" id="proyectos" class="proyectos" name="proyectos" {% if alumnos is null %} disabled {% endif %} {% if proyectos is null %} disabled {% endif %}>
+                            <option value="-1" id="-1">Seleccione una opción</option>
+                            {% for clave, valor  in proyectos %}
+                            {% if clave == index_proyecto %}
+                                <option value="{{clave}}" name="{{clave}}" id="pro-{{clave}}" class="opcion-proyectos" selected>{{ valor }}</option>
+                            {% else %}
+                                <option value="{{clave}}" name="{{clave}}" id="pro-{{clave}}" class="opcion-proyectos">{{ valor }}</option>
+                            {% endif %}
+                            {% endfor %}
+                    </select>
+                </div>
+                <input type="text" name="id_proyectos" id="id_proyectos" value="" hidden>
+            </form>
+        </div>
+    </div>
+
+    {% if index_alumno != -1 %}
+    <!-- labor social -->
+    <!-- descargar boleta -->
+    <div class="row">
+        <div class="col-sm-12">
+            <hr>
+            <!-- //{id_curso}/{id_seccion}/{id_alumno}/{id_proyecto} -->
+            <a target="_blank" class="btn btn-primary pull-left" href="{{ path_for('avance_alumno', {'id_curso':index_curso, 'id_seccion':index_seccion, 'id_alumno': index_alumno, 'id_proyecto':index_proyecto}) }}">Ver Avance</a>
+            <!-- <button class="btn btn-primary pull-left">Ver Avance</button> -->
+            <button class="btn btn-primary pull-right">Descargar avance</button>
+        </div>
+    </div>
+    
+    <!-- //labor social -->
+    {% endif %}
+    {% if proyectos %}
+    <div class="row">
+        <div class="col-sm-12">
+            <hr>
+            <h2>Boletas Rubricas: </h2>
+        </div>
+        <div class="col-sm-6">
+            <form action="{{ path_for('busqueda_boleta_proyectos') }}" method="post" id="form-proyectos">
+                <div class="form-group">
+                    <label for="sesion">Seleccione el proyecto</label>
+                    <select class="form-control" id="proyectos" class="proyectos" name="proyectos" {% if proyectos is null %} disabled {% endif %}>
+                            <option value="-1" id="-1">Seleccione una opción</option>
+                            {% for clave, valor  in proyectos %}
+                            {% if clave == index_proyecto %}
+                                <option value="{{clave}}" name="{{clave}}" id="pro-{{clave}}" class="opcion-proyectos" selected>{{ valor }}</option>
+                            {% else %}
+                                <option value="{{clave}}" name="{{clave}}" id="pro-{{clave}}" class="opcion-proyectos">{{ valor }}</option>
+                            {% endif %}
+                            {% endfor %}
+                    </select>
+                </div>
+                <input type="text" name="id_proyectos" id="id_proyectos" value="" hidden>
+            </form>
+        </div>
+    </div>     
+    <div class="row ultimo">
+        <div class="col-sm-3"></div>
+        <div class="col-sm-6 ">
+            <canvas id="boleta_proyecto_acumulado" width="200" height="200"></canvas>
+            <script>
+                var inicio = {{ info_rubrica.tam|json_encode() }};
+                // var inicio = 3;
+                var labels_rubrica = [];
+                
+                var color_total_rubrica = [];
+                var border_color_total_rubrica = [];
+                
+                for(i=1; i <= inicio; i++)
+                {
+                    labels_rubrica.push(i);
+                    color_total_rubrica.push('rgba(52, 152, 219,0.2)');
+                    border_color_total_rubrica.push('rgba(41, 128, 185,1.0)');
+                }
+                var info_total_rubrica = '{{info_rubrica.TOTAL_RUBRICA }}';
+                var data_total_rubrica = info_total_rubrica.split(';');
+                
+                var info_sesion_target = '{{info_rubrica.SESION_TARGET }}';
+                var data_sesion_target = info_sesion_target.split(';');
+
+                var info_total_rubrica = '{{info_rubrica.LABEL }}';
+                var data_label_rubrica = info_total_rubrica.split(';');
+
+                var grafica_rubrica_acumulado = {
+                    labels: data_label_rubrica,
+                    datasets: [
+                    {
+                        type: 'bar',
+                        label: 'Total rubricas Cumplidas',
+                        backgroundColor: color_total_rubrica,
+                        data: data_total_rubrica,
+                        borderColor: border_color_total_rubrica,
+                        borderWidth: 2
+                    },
+                    {
+                        type: 'line',
+                        label: 'Sesión Target',
+                        borderColor: 'rgba(231, 76, 60,1.0)',
+                        borderWidth: 2,
+                        fill: false,
+                        data: data_sesion_target
+                    }
+                ]
+                };
+            </script>
+        </div>
+
+        <div class="col-sm-3"></div>
+    </div>
+    {% endif %}
+
+    {% if info_boleta %}
+    <div class="row">
+        <div class="col-sm-12">
+            <hr>
+            <h2>Boletas Code: </h2>
+        </div>
+    </div>     
+    <div class="row ultimo">
+        <div class="col-sm-6 ">
+            <canvas id="boleta_code_acumulado" width="200" height="200"></canvas>
+            <script>
+                var inicio = {{ info_boleta.tam|json_encode() }};
+                // var inicio = 3;
+                var labels = [];
+                
+                var color_oblig_acum = [];
+                var border_color_acum = [];
+                var color_general_acum = [];
+                var border_color_general_acum = [];
+
+                for(i=1; i <= inicio; i++)
+                {
+                    labels.push(i);
+                    color_oblig_acum.push('rgba(52, 152, 219,0.2)');
+                    border_color_acum.push('rgba(41, 128, 185,1.0)');
+                    color_general_acum.push('rgba(230, 126, 34,0.2)');
+                    border_color_general_acum.push('rgba(211, 84, 0,1.0)');
+                }
+                var info_obligatorio_acum = '{{info_boleta.OBLIGATORIO_ACUM }}';
+                var data_obligatorio_acum = info_obligatorio_acum.split(';');
+                
+                var info_general_acumulado = '{{info_boleta.GENERAL_ACUMULADO }}';
+                var data_general_acumulado = info_general_acumulado.split(';');
+
+                var info_cum_target = '{{info_boleta.ACUM_TARGET }}';
+                var data_acum_target = info_cum_target.split(';');
+
+                var grafica_acumulado = {
+                    labels: labels,
+                    datasets: [
+                    {
+                        type: 'bar',
+                        label: 'Obligatorio Acum',
+                        backgroundColor: color_oblig_acum,
+                        data: data_obligatorio_acum,
+                        borderColor: border_color_acum,
+                        borderWidth: 2
+                    }, 
+                    {
+                        type: 'bar',
+                        label: 'General Acum',
+                        backgroundColor: color_general_acum,
+                        data: data_general_acumulado,
+                        borderColor: border_color_general_acum,
+                        borderWidth: 2
+                    },
+                    {
+                        type: 'line',
+                        label: 'Acum Target',
+                        borderColor: 'rgba(127, 140, 141,1.0)',
+                        borderWidth: 2,
+                        fill: false,
+                        data: data_acum_target
+                    }
+                ]
+                };
+            </script>
+        </div>
+
+        <div class="col-sm-6 ">
+            <canvas id="boleta_code_sesion" width="200" height="200"></canvas>
+            <script>
+               
+                var info_sesion_obligatorio = '{{info_boleta.SESION_OBLIGATORIO }}';
+                var data_sesion_obligatorio = info_sesion_obligatorio.split(';');
+                
+                var info_sesion_general = '{{info_boleta.SESION_GENERAL }}';
+                var data_sesion_general = info_sesion_general.split(';');
+
+                var info_sesion_target = '{{info_boleta.SESION_TARGET }}';
+                var data_sesion_target = info_sesion_target.split(';');
+
+                var grafica_sesion = {
+                    labels: labels,
+                    datasets: [
+                    {
+                        type: 'bar',
+                        label: 'Sesión Obligatorio',
+                        backgroundColor: color_oblig_acum,
+                        data: data_sesion_obligatorio,
+                        borderColor: border_color_acum,
+                        borderWidth: 2
+                    }, 
+                    {
+                        type: 'bar',
+                        label: 'General Acum',
+                        backgroundColor: color_general_acum,
+                        data: data_sesion_general,
+                        borderColor: border_color_general_acum,
+                        borderWidth: 2
+                    },
+                    {
+                        type: 'line',
+                        label: 'Acum Target',
+                        borderColor: 'rgba(127, 140, 141,1.0)',
+                        borderWidth: 2,
+                        fill: false,
+                        data: data_sesion_target
+                    }
+                ]
+                };
+                
+            </script>
+        </div>
+    </div>
+    {% endif %}
+
+    {% if info_video %}
+    <div class="row">
+        <div class="col-sm-12">
+            <hr>
+            <h2>Boletas Videos: </h2>
+        </div>
+    </div>     
+    <div class="row ultimo">
+        <div class="col-sm-6 ">
+            <canvas id="boleta_video_acumulado" width="200" height="200"></canvas>
+            <script>
+                var inicio = {{ info_video.tam|json_encode() }};
+                // var inicio = 3;
+                var labels_video = [];
+                
+                var color_oblig_acum = [];
+                var border_color_acum = [];
+                var color_general_acum = [];
+                var border_color_general_acum = [];
+
+                for(i=1; i <= inicio; i++)
+                {
+                    labels_video.push(i);
+                    color_oblig_acum.push('rgba(52, 152, 219,0.2)');
+                    border_color_acum.push('rgba(41, 128, 185,1.0)');
+                    color_general_acum.push('rgba(230, 126, 34,0.2)');
+                    border_color_general_acum.push('rgba(211, 84, 0,1.0)');
+                }
+                var info_obligatorio_acum = '{{info_video.OBLIGATORIO_ACUM }}';
+                var data_obligatorio_acum = info_obligatorio_acum.split(';');
+                
+                var info_general_acumulado = '{{info_video.GENERAL_ACUMULADO }}';
+                var data_general_acumulado = info_general_acumulado.split(';');
+
+                var info_cum_target = '{{info_video.ACUM_TARGET }}';
+                var data_acum_target = info_cum_target.split(';');
+
+                var grafica_video_acumulado = {
+                    labels: labels_video,
+                    datasets: [
+                    {
+                        type: 'bar',
+                        label: 'Obligatorio Acum',
+                        backgroundColor: color_oblig_acum,
+                        data: data_obligatorio_acum,
+                        borderColor: border_color_acum,
+                        borderWidth: 2
+                    }, 
+                    {
+                        type: 'bar',
+                        label: 'General Acum',
+                        backgroundColor: color_general_acum,
+                        data: data_general_acumulado,
+                        borderColor: border_color_general_acum,
+                        borderWidth: 2
+                    },
+                    {
+                        type: 'line',
+                        label: 'Acum Target',
+                        borderColor: 'rgba(127, 140, 141,1.0)',
+                        borderWidth: 2,
+                        fill: false,
+                        data: data_acum_target
+                    }
+                ]
+                };
+            </script>
+        </div>
+
+        <div class="col-sm-6 ">
+            <canvas id="boleta_video_sesion" width="200" height="200"></canvas>
+            <script>
+               
+                var info_sesion_obligatorio = '{{info_video.SESION_OBLIGATORIO }}';
+                var data_sesion_obligatorio = info_sesion_obligatorio.split(';');
+                
+                var info_sesion_general = '{{info_video.SESION_GENERAL }}';
+                var data_sesion_general = info_sesion_general.split(';');
+
+                var info_sesion_target = '{{info_video.SESION_TARGET }}';
+                var data_sesion_target = info_sesion_target.split(';');
+
+                var grafica_video_sesion = {
+                    labels: labels_video,
+                    datasets: [
+                    {
+                        type: 'bar',
+                        label: 'Sesión Obligatorio',
+                        backgroundColor: color_oblig_acum,
+                        data: data_sesion_obligatorio,
+                        borderColor: border_color_acum,
+                        borderWidth: 2
+                    }, 
+                    {
+                        type: 'bar',
+                        label: 'General Acum',
+                        backgroundColor: color_general_acum,
+                        data: data_sesion_general,
+                        borderColor: border_color_general_acum,
+                        borderWidth: 2
+                    },
+                    {
+                        type: 'line',
+                        label: 'Acum Target',
+                        borderColor: 'rgba(127, 140, 141,1.0)',
+                        borderWidth: 2,
+                        fill: false,
+                        data: data_sesion_target
+                    }
+                ]
+                };
+                
+            </script>
+        </div>
+    </div>
+    {% endif %}
+
+    {% if info_pregunta %}
+    <div class="row">
+        <div class="col-sm-12">
+            <hr>
+            <h2>Boletas Preguntas: </h2>
+        </div>
+    </div>     
+    <div class="row ultimo">
+        <div class="col-sm-6 ">
+            <canvas id="boleta_pregunta_acumulado" width="200" height="200"></canvas>
+            <script>
+                var inicio = {{ info_pregunta.tam|json_encode() }};
+                // var inicio = 3;
+                var labels_pregunta = [];
+                
+                var color_oblig_acum = [];
+                var border_color_acum = [];
+                var color_general_acum = [];
+                var border_color_general_acum = [];
+
+                for(i=1; i <= inicio; i++)
+                {
+                    labels_pregunta.push(i);
+                    color_oblig_acum.push('rgba(52, 152, 219,0.2)');
+                    border_color_acum.push('rgba(41, 128, 185,1.0)');
+                    color_general_acum.push('rgba(230, 126, 34,0.2)');
+                    border_color_general_acum.push('rgba(211, 84, 0,1.0)');
+                }
+                var info_obligatorio_acum = '{{info_pregunta.OBLIGATORIO_ACUM }}';
+                var data_obligatorio_acum = info_obligatorio_acum.split(';');
+                
+                var info_general_acumulado = '{{info_pregunta.GENERAL_ACUMULADO }}';
+                var data_general_acumulado = info_general_acumulado.split(';');
+
+                var info_cum_target = '{{info_pregunta.ACUM_TARGET }}';
+                var data_acum_target = info_cum_target.split(';');
+
+                var grafica_pregunta_acumulado = {
+                    labels: labels_pregunta,
+                    datasets: [
+                    {
+                        type: 'bar',
+                        label: 'Obligatorio Acum',
+                        backgroundColor: color_oblig_acum,
+                        data: data_obligatorio_acum,
+                        borderColor: border_color_acum,
+                        borderWidth: 2
+                    }, 
+                    {
+                        type: 'bar',
+                        label: 'General Acum',
+                        backgroundColor: color_general_acum,
+                        data: data_general_acumulado,
+                        borderColor: border_color_general_acum,
+                        borderWidth: 2
+                    },
+                    {
+                        type: 'line',
+                        label: 'Acum Target',
+                        borderColor: 'rgba(127, 140, 141,1.0)',
+                        borderWidth: 2,
+                        fill: false,
+                        data: data_acum_target
+                    }
+                ]
+                };
+            </script>
+        </div>
+
+        <div class="col-sm-6 ">
+            <canvas id="boleta_pregunta_sesion" width="200" height="200"></canvas>
+            <script>
+               
+                var info_sesion_obligatorio = '{{info_pregunta.SESION_OBLIGATORIO }}';
+                var data_sesion_obligatorio = info_sesion_obligatorio.split(';');
+                
+                var info_sesion_general = '{{info_pregunta.SESION_GENERAL }}';
+                var data_sesion_general = info_sesion_general.split(';');
+
+                var info_sesion_target = '{{info_pregunta.SESION_TARGET }}';
+                var data_sesion_target = info_sesion_target.split(';');
+
+                var grafica_pregunta_sesion = {
+                    labels: labels_pregunta,
+                    datasets: [
+                    {
+                        type: 'bar',
+                        label: 'Sesión Obligatorio',
+                        backgroundColor: color_oblig_acum,
+                        data: data_sesion_obligatorio,
+                        borderColor: border_color_acum,
+                        borderWidth: 2
+                    }, 
+                    {
+                        type: 'bar',
+                        label: 'General Acum',
+                        backgroundColor: color_general_acum,
+                        data: data_sesion_general,
+                        borderColor: border_color_general_acum,
+                        borderWidth: 2
+                    },
+                    {
+                        type: 'line',
+                        label: 'Acum Target',
+                        borderColor: 'rgba(127, 140, 141,1.0)',
+                        borderWidth: 2,
+                        fill: false,
+                        data: data_sesion_target
+                    }
+                ]
+                };
+                
+            </script>
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+<script>
+    window.onload = function() {
+        var ctx_sesion = document.getElementById("boleta_code_sesion");
+        var sesiones_code = new Chart(ctx_sesion, {
+            type: 'bar',
+            data: grafica_sesion,
+            options: {
+                responsive: true,
+                title: {
+                    display: true,
+                    text: 'Boleta Code Sesiones'
+                },
+                tooltips: {
+                    mode: 'index',
+                    intersect: true
+                },
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero:true
+                        }
+                    }]
+                }
+            }
+        });
+        var ctx = document.getElementById("boleta_code_acumulado");
+        var acumulado = new Chart(ctx, {
+            type: 'bar',
+            data: grafica_acumulado,
+            options: {
+                responsive: true,
+                title: {
+                    display: true,
+                    text: 'Boleta Code Acumulado'
+                },
+                tooltips: {
+                    mode: 'index',
+                    intersect: true
+                },
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero:true
+                        }
+                    }]
+                }
+            }
+        });
+
+        //---------------------------------
+        //-----------VIDEOS----------------
+        //---------------------------------
+
+        var ctx_video_sesion = document.getElementById("boleta_video_sesion");
+        var video_sesiones = new Chart(ctx_video_sesion, {
+            type: 'bar',
+            data: grafica_video_sesion,
+            options: {
+                responsive: true,
+                title: {
+                    display: true,
+                    text: 'Boleta Video Sesiones'
+                },
+                tooltips: {
+                    mode: 'index',
+                    intersect: true
+                },
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero:true
+                        }
+                    }]
+                }
+            }
+        });
+        
+        var ctx_video_acumulado = document.getElementById("boleta_video_acumulado");
+        var video_acumulado = new Chart(ctx_video_acumulado, {
+            type: 'bar',
+            data: grafica_video_acumulado,
+            options: {
+                responsive: true,
+                title: {
+                    display: true,
+                    text: 'Boleta Video Acumulado'
+                },
+                tooltips: {
+                    mode: 'index',
+                    intersect: true
+                },
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero:true
+                        }
+                    }]
+                }
+            }
+        });
+        //---------------------------------
+        //-----------PREGUNTAS-------------
+        //---------------------------------
+
+        var ctx_pregunta_sesion = document.getElementById("boleta_pregunta_sesion");
+        var pregunta_sesiones = new Chart(ctx_pregunta_sesion, {
+            type: 'bar',
+            data: grafica_pregunta_sesion,
+            options: {
+                responsive: true,
+                title: {
+                    display: true,
+                    text: 'Boleta Pregunta Sesiones'
+                },
+                tooltips: {
+                    mode: 'index',
+                    intersect: true
+                },
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero:true
+                        }
+                    }]
+                }
+            }
+        });
+        var ctx_pregunta_acumulado = document.getElementById("boleta_pregunta_acumulado");
+        var pregunta_acumulado = new Chart(ctx_pregunta_acumulado, {
+            type: 'bar',
+            data: grafica_pregunta_acumulado,
+            options: {
+                responsive: true,
+                title: {
+                    display: true,
+                    text: 'Boleta Pregunta Acumulado'
+                },
+                tooltips: {
+                    mode: 'index',
+                    intersect: true
+                },
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero:true
+                        }
+                    }]
+                }
+            }
+        });
+
+        //---------------------------------
+        //-----------RUBRICA---------------
+        //---------------------------------
+        var ctx_proyecto_acumulado = document.getElementById("boleta_proyecto_acumulado");
+        var proyecto_acumulado = new Chart(ctx_proyecto_acumulado, {
+            type: 'bar',
+            data: grafica_rubrica_acumulado,
+            options: {
+                responsive: true,
+                title: {
+                    display: true,
+                    text: 'Boleta Rubricas'
+                },
+                tooltips: {
+                    mode: 'index',
+                    intersect: true
+                },
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero:true
+                        }
+                    }]
+                }
+            }
+        });
+    };
+
+    $('#cursos').change(function() 
+    {
+        if($(this).val() != -1)
+        {
+            $('#id_curso').val('opt-'+$(this).val());
+            // alert('val: '+$('#id_curso').val());
+            $('#form-cursos').submit();
+        }  
+    });
+
+    $('#secciones').change(function() 
+    {
+        if($(this).attr('id') != -1)
+        {
+            $('#id_seccion').val('opt-'+$(this).val()+'-{{index_curso}}');
+            // alert($('#id_seccion').val());
+            $('#form-secciones').submit();
+        }
+    });
+
+    $('#alumnos').change(function() 
+    {
+        if($(this).attr('id') != -1)
+        {
+            $('#id_alumno').val('opt-'+$(this).val()+'-{{index_curso}}-{{index_seccion}}');
+            // alert($('#id_alumno').val());
+            $('#form-alumnos').submit();
+        }
+    });
+
+
+    $('#proyectos').change(function() 
+    {
+        if($(this).attr('id') != -1)
+        {
+            $('#id_proyectos').val('pro-'+$(this).val()+'-{{index_curso}}-{{index_seccion}}-{{index_alumno}}');
+            // alert($('#id_proyectos').val());
+            $('#form-proyectos').submit();
+        }
+    });
+    
+</script>
+{% endblock %}

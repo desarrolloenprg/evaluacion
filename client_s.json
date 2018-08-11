@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "progracademy-reportes",
+  "private_key_id": "36c5f278867ff0f2d03b3bd648368d6574c355fc",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQC2bjHfm1TQlceP\nAMJghTKTx89Tm6h0yffIgnbZ/K4+pfDnJteidDulwjUwWQpolro4s6gtZFKWwUES\n1SVaAfcYekgsyXb7hzmMHEVvJ+lc928D9BcHI/AAZyD0+tK0fLPvD5NnYRRBN+aY\nbHvRGvTIYJt0ksxxxTzBq76dZTlPNe9GmhecZ8P1eOkn6LB7lo4kf3hjbwpRAoyG\nAdoqIX1AwJCsd/adjJQW2dWhpayrmu9+gXxStyqV3fRUn2ZfgO8JQuW3+LJIZhK/\nsgaiy0Kch2G+JAX2LGwFZiNy1ytRRJfjEBF8a3QH8Kh3oBqFV5uuyyrE5TXw5MyD\nzLcvqBmlAgMBAAECggEAC9V5nD70AUTaCVt8AG1bgs0ZFJwaERth3Kqj4Y+b0PoM\nNr5lCgd+sAm5UA3SmEbAxTlYPTuPBPL70OgtMFnEyNxzzp3x/y5+K+nQkj2VTH/L\nfobosICjCq+l6mZT4TveozEQN4pLWVCyP2x4GrAkNVRY+TallvK7tnd42bZtgYcK\nnOJCQK3BtfQ1UMQRpyt91N17VslbULQg87+K2ZU+pGGoVcM6krdS3H9VBYiMcfF4\nXElI04+SVXUR06G5VL783y5B1IGwkwKrB6MPJ+tFekdBdgKSXxkR9tuVi8/j/FdU\nzcdcV6VMv92CP08vWTueUOZfQziYU3rPwJd+jUqSUQKBgQD1/x4jvOr9RXICSxUw\nFEXRWodpnPrtpb4EVsU3p2ZVyteSp4iP3Ek44M2F2B1swuSaOUHyftGx+W3enV5a\neDHrQ4fTVml9SnSAQRrhmP8uIXpkPQYGflUDWFi0NKoQMVkxBLN0TOp6dhnIjciW\nQqyfKnG8sV1N9Yx0g6C8VNqsUQKBgQC92VbCkthMZzLcBmX4fj/kOZvKxf16KxFe\nJR7hpClDdEQmDcDRY3cjhUhkgptTKgIdGideimRTaPFLbs8tYuauQNZ8NnFCSbpZ\nrQchukTprZMFKoW2/G3UI3uEoFmHUlzfheCO+Uym8PPY+/yKe5sKdM1HYYGUmyd+\nSjHIQTXHFQKBgFd+zCuN8E7xOmHSbtDRBRw3hN5ttVp9jx5f9nmbEu0E3rQM3qe8\nhFa0rqUifyTGFSU9pFUqAk+5FfkOJBctlSPGuzLSE2c66kEL5xHCp1CzG6M3iUMa\nAAbWj4ZZDPwBcWXb9DAzg1rXUshgla3MPTXHlPi2ZSdrZO+0OaGC1NxhAoGARaU3\niMWqB81MAR9vxQs7kRP5LRgY9vpZsrnXbFt2r8I1ReiBtc7RY/x/JDAtnwKoJ9jy\nXGJUj6zN6ChMZJAFpCMxC/xE7FZzwHYTSbI1mawNZTXGO+y6tboWk/7nGReD7pQE\nXy7hidSXACDg8kSKCfnzXJ5OlR+eC1xYiugxPEkCgYEAgETpRT01nTtrwC5cr5KO\naIQioTWgpLrKpnghmekdtKpCFBu+yftWPbns8UBFm+MPjRftpschngAeIl9GqzOq\nGBwUpuRURm+r2X4x+myLnmzsP3S5t2WKPkwgA0ECp5C4vJtoXYTJ17Plhc9X/qfJ\nIDwN3dM4Tu5MbltUMmuYCto=\n-----END PRIVATE KEY-----\n",
+  "client_email": "prueba0@progracademy-reportes.iam.gserviceaccount.com",
+  "client_id": "109811229702266609528",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://accounts.google.com/o/oauth2/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/prueba0%40progracademy-reportes.iam.gserviceaccount.com"
+}

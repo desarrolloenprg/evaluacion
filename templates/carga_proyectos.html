@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+
+{% block titulo %} PRG-Carga | Proyectos {% endblock %}
+
+{%block contenido%}
+
+<script src="{{ base_url() }}/js/jquery-1.9.1.js"></script>
+{% if error >= 0 %}
+<script>
+    $(document).ready(function() { $('#aviso_error').modal('show'); });
+</script>
+{% endif %}
+
+<h3 style="margin-bottom: 30px;">Cargar datos de proyectos</h3>
+
+<div class="container">
+    <div class="row">
+        <div class="col-sm-12">
+            <form action="{{ path_for('data_carga_proyecto') }}" method="post">
+                <div class="row">
+                    <div class="col">
+                        <label for="">Id del Fichero(Sección): </label>
+                        <input maxlength="60"  type="text" class="form-control" id="id-seccion" name="id-seccion">
+                        <small id="seccion-ayuda" class="form-text text-muted">El archivo debe existir en su cuenta de Google Drive.</small>
+                    </div>
+                    <div class="col">
+                        <label for="">Nombre de la hoja del fichero de sección: </label>
+                        <input maxlength="30" type="text" class="form-control" id="fichero-seccion-hoja" name="fichero-seccion-hoja">
+                        <small id="seccion-hoja-ayuda" class="form-text text-muted">La hoja debe existe en el fichero de sección.</small>
+                    </div>
+                  </div>
+                  <div class="row form-row-space pull-right">
+                    <button type="submit" class="btn btn-primary ">Guardar</button>
+                  </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="aviso_error" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Error</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            {% if error == 0 %}
+            <p>Error, campos vacíos.</p>
+            {% elseif error == 1  %}
+            <p>Existe un problema al leer el archivo.</p>  
+            {% elseif error == 2  %}
+            <p>Existe un problema al conectarse con el servidor de Drive.</p>  
+            {% elseif error == 3  %}
+            <p>Error al conectarse con la base de datos.</p>
+            {% elseif error == 10  %}
+            <p>Error, no se encuentra la sesion almacenada en la BD.</p>      
+            {% endif %}
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+            <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
+        </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
