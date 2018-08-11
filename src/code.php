@@ -24,7 +24,6 @@ class Code
         $id_sesion = -1;
         try {
             $matriz = $this->google->matriz($id_seccion, $hoja_seccion.'!'.$rango);
-            
             $id_curso = $this->agregar_curso($matriz);
             if ($id_curso > 0)
             {
@@ -440,6 +439,28 @@ class Code
         $matriz_aux = [];
         $matriz = [];
         $sesiones = $this->cone->ver_sesiones_alumno_code($id_curso, $id_alumno);
+        for($i=0; $i < count($sesiones); $i++)
+        {
+            if($i < count($sesiones)-1)
+            {
+                $matriz_aux = $this->cone->boleta_code($sesiones[$i]["ID"], $sesiones[$i+1]["ID"], $id_curso, $id_seccion, $id_alumno);
+            }
+            else
+            {
+                $matriz_aux = $this->cone->boleta_code_1($sesiones[$i]["ID"], $id_curso, $id_seccion, $id_alumno);
+            }
+            $matriz[] = $matriz_aux;
+        }
+
+        return $matriz;
+    }
+
+    public function boleta_code_rango($id_curso, $id_seccion, $id_alumno, $rango_inicio, $rango_fin)
+    {
+        $matriz_aux = [];
+        $matriz = [];
+        $sesiones = $this->cone->ver_sesiones_alumno_code_rango($id_curso, $id_alumno, $rango_inicio, $rango_fin);
+        
         for($i=0; $i < count($sesiones); $i++)
         {
             if($i < count($sesiones)-1)

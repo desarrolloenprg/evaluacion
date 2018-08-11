@@ -57,66 +57,70 @@
 
         <div class="row contenedor-info-semanas color-grey" >
             <div class="col-md-12 " style="min-height:200px;">
-                <form action="">
-                    <div class="form-row">
-                        <div class="form-group col-md-4">
-                            <p class="text-info-alumno pull-right"> <span style="color:#a61c00;">Alumno: </span> {{ alumno.NOMBRE }}</p>
-                        </div>
-                        <div class="form-group col-md-4" style="margin-left:auto; margin-right:auto;">
-                            <p class="text-info-alumno text-center" > <span style="color:#a61c00;">Sección: </span> {{ seccion.NOMBRE }} </p>
-                        </div>
-                        <div class="form-group col-md-4">
-                            <p class="text-info-alumno pull-left"> <span style="color:#a61c00;">ID: </span> {{ alumno.DNI }} </p>
-                        </div>
+                <div class="form-row">
+                    <div class="form-group col-md-4">
+                        <p class="text-info-alumno pull-right"> <span style="color:#a61c00;">Alumno: </span> {{ alumno.NOMBRE }}</p>
                     </div>
+                    <div class="form-group col-md-4" style="margin-left:auto; margin-right:auto;">
+                        <p class="text-info-alumno text-center" > <span style="color:#a61c00;">Sección: </span> {{ seccion.NOMBRE }} </p>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <p class="text-info-alumno pull-left"> <span style="color:#a61c00;">ID: </span> {{ alumno.DNI }} </p>
+                    </div>
+                </div>
 
-                    <div class="form-row">
-                        <div class="form-group col-md-4 ">
-                            <div class="contendor-resumen pull-right"><p class="text-resumen">Resumen del Avance</p></div>
-                        </div>
-                        <div class="form-group col-md-8 div-squad" style="margin-left:auto; margin-right:auto;">
-                           <div class="contenedor-leyenda">
-                                <div class="form-row">
-                                    <div class="form-group col-md-4">
-                                        <p class="text-info-leyenda pull-left" style="font-size:1.5em; font-weight:900 !important; margin-top:-5px;"> <span style="color:#a61c00;">Leyenda: </span></p>
-                                    </div>
-                                    <div class="form-group col-md-4">
-                                        <div class="row">
-                                            <div class="col-md-10">
-                                                <p class="form-ckeck-label text-info-leyenda pull-right">Objetivo planteado </p>
-                                            </div>
-                                            <div class="col-md-2">
-                                                <div class="form-check-label leyenda-orange pull-left"></div>
-                                            </div>
+                <div class="form-row">
+                    <div class="form-group col-md-4 ">
+                        <div class="contendor-resumen pull-right"><p class="text-resumen">Resumen del Avance</p></div>
+                    </div>
+                    <div class="form-group col-md-8 div-squad" style="margin-left:auto; margin-right:auto;">
+                        <div class="contenedor-leyenda">
+                            <div class="form-row">
+                                <div class="form-group col-md-4">
+                                    <p class="text-info-leyenda pull-left" style="font-size:1.5em; font-weight:900 !important; margin-top:-5px;"> <span style="color:#a61c00;">Leyenda: </span></p>
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <div class="row">
+                                        <div class="col-md-10">
+                                            <p class="form-ckeck-label text-info-leyenda pull-right">Objetivo planteado </p>
                                         </div>
-                                    </div>
-                                    <div class="form-group col-md-4">
-                                        <div class="row">
-                                            <div class="col-md-10">
-                                                <p class="form-ckeck-label text-info-leyenda pull-right">Logro alcanzado </p>
-                                            </div>
-                                            <div class="col-md-2">
-                                                <div class="form-check-label leyenda-red pull-left"></div>
-                                            </div>
+                                        <div class="col-md-2">
+                                            <div class="form-check-label leyenda-orange pull-left"></div>
                                         </div>
                                     </div>
                                 </div>
-                           </div>
+                                <div class="form-group col-md-4">
+                                    <div class="row">
+                                        <div class="col-md-10">
+                                            <p class="form-ckeck-label text-info-leyenda pull-right">Logro alcanzado </p>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <div class="form-check-label leyenda-red pull-left"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
+                </div>
 
-                    <div class="form-row" style="margin-top:10px;">
-                        <div class="form-group col-md-4">
-                            <button type="button" id="btn_prev" class="btn-red pull-right"><i class="fa fa-fw fa-arrow-left pull-left" style="margin-top:5px;"></i>Sesión anterior</button>
-                        </div>
-                        <div class="form-group col-md-4 text-center" >
-                            
-                        </div>
-                        <div class="form-group col-md-4">
-                            <button type="button" id="btn_prox" class="btn-red btn-xs">Sesión siguiente<i class="fa fa-fw fa-arrow-right pull-right" style="margin-top:5px;"></i></button>
-                        </div>
+                <div class="form-row" style="margin-top:10px;">
+                    <div class="form-group col-md-4">
+                        <form action="{{ path_for('anterior_avance') }}" method="POST" id="form-anterior">
+                            <button type="submit" id="btn_prev" class="btn-red pull-right"><i class="fa fa-fw fa-arrow-left pull-left" style="margin-top:5px;"></i>Sesión anterior</button>
+                            <input type="text" id="input_anterior" name="input_anterior" value="{{index_curso}}-{{index_seccion}}-{{index_alumno}}-{{ rango_inicio }}-{{ rango_fin }}" hidden>
+                        </form>
                     </div>
-                </form>
+                    <div class="form-group col-md-4 text-center" >
+                        
+                    </div>
+                    <div class="form-group col-md-4">
+                        <form action="{{ path_for('siguiente_avance') }}" method="POST" id="form-siguiente">
+                            <button type="submit" id="btn_prox" class="btn-red btn-xs">Sesión siguiente<i class="fa fa-fw fa-arrow-right pull-right" style="margin-top:5px;"></i></button>
+                            <input type="text" id="input_siguiente" name="input_siguiente" value="{{index_curso}}-{{index_seccion}}-{{index_alumno}}-{{ rango_inicio }}-{{ rango_fin }}" hidden>
+                        </form>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -690,15 +694,18 @@
             }
         });
 
-        $('#btn_prev').click(function() 
-        {
-            alert("anterior");
-        });
+        // $('#btn_prev').click(function() 
+        // {
+        //     // alert("casa");
+        //     $('#input_anterior').val('{{index_curso}}-{{index_seccion}}-{{index_alumno}}-{{ rango_inicio }}-{{ rango_fin }}');
+        //     $('#form-anterior').submit();
+        // });
 
-        $('#btn_prox').click(function() 
-        {
-            alert("siguiente");
-        });
+        // $('#btn_prox').click(function() 
+        // {
+        //     $('#input_siguiente').val('{{index_curso}}-{{index_seccion}}-{{index_alumno}}-{{ rango_inicio }}-{{ rango_fin }}');
+        //     $('#form-siguiente').submit();
+        // });
     });
 </script>
 <script src="{{ base_url() }}/vendor/popper/popper.min.js"></script>

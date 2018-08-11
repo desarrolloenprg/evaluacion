@@ -1621,6 +1621,27 @@ class Conexion
         return $matriz;
     }
 
+    public function ver_sesiones_alumno_code_rango($id_curso, $id_alumno, $rango_inicio, $rango_fin)
+    {
+        $matriz = [];
+        $this->conectar();
+        if($this->conexion)
+        {
+            $query = "SELECT se.ID, se.NUMERO, se.FECHA FROM SESION as se, CURSO as cu, ALUMNO as al, AVANCE_CODE as av WHERE se.FK_CURSO_ID=cu.ID AND av.FK_SESION_ID=se.ID AND av.FK_ALUMNO_ID=al.ID AND al.ID=".$id_alumno." AND cu.ID=".$id_curso." ORDER BY se.FECHA DESC LIMIT ".$rango_inicio.", ".$rango_fin." ";
+            if($resultado = mysqli_query($this->conexion, $query))
+            {
+                $i = 0;
+                while ($filas = $resultado->fetch_assoc())
+                {
+                    $matriz[$i++] = $filas;
+                }
+                $resultado->free();
+            }
+            $this->desconectar();
+        }
+        return $matriz;
+    }
+
     public function ver_sesiones_alumno_video($id_curso, $id_alumno)
     {
         $matriz = [];

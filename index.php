@@ -1100,6 +1100,74 @@
         return $this->view->render($response, 'generar_boletas.html', ['pais_default' => $pais_default, 'escuela_default' => $escuela_default, 'index_proyecto'=>$index_proyecto, 'proyectos'=>$proyectos, 'info_rubrica'=>$info_rubrica, 'info_pregunta'=>$info_pregunta, 'info_video'=>$info_video, 'info_boleta'=>$info_boleta, 'index_curso'=>$index_curso, 'cursos'=>$cursos, 'index_alumno'=>$index_alumno, 'alumnos'=>$alumnos, 'index_seccion'=>$index_seccion, 'secciones'=>$secciones]);
     })->setName('generar_boletas');
 
+    $app->post('/siguiente_avance', function($request, $response, $args) 
+    {
+        foreach($request->getParsedBody() as $key => $value)
+        {
+            if(empty($value))
+            {
+                $this->session->error = 0;
+                return $response->withRedirect($this->router->pathFor('generar_boletas'));
+            }
+        }
+
+        $dato = $request->getParsedBody()['input_siguiente'];
+        $valores = explode("-", $dato);
+        //{{index_curso}}-{{index_seccion}}-{{index_alumno}}-{{ rango_fin }}
+        $id_curso = $valores[0];
+        $id_seccion = $valores[1];
+        $id_alumno = $valores[2];
+        $rango_inicio = (int) $valores[3];
+        $rango_fin = (int) $valores[4];
+
+        // $rango_inicio += 1;
+        $rango_fin += 1;
+        // echo "inicio: ".$rango_inicio."</br>";
+        // echo "fin: ".$rango_fin."</br>";
+        // exit;
+        // $this->session->rango_inicio = $rango_inicio;
+        $this->session->rango_fin = $rango_fin;
+
+        return $response->withRedirect('avance_alumno/'.$id_curso.'/'.$id_seccion.'/'.$id_alumno.'/0');
+
+    })->setName('siguiente_avance');
+
+    $app->post('/anterior_avance', function($request, $response, $args) 
+    {
+        foreach($request->getParsedBody() as $key => $value)
+        {
+            if(empty($value))
+            {
+                $this->session->error = 0;
+                return $response->withRedirect($this->router->pathFor('generar_boletas'));
+            }
+        }
+
+        $dato = $request->getParsedBody()['input_anterior'];
+        $valores = explode("-", $dato);
+        //{{index_curso}}-{{index_seccion}}-{{index_alumno}}-{{ rango_fin }}
+        $id_curso = $valores[0];
+        $id_seccion = $valores[1];
+        $id_alumno = $valores[2];
+        $rango_inicio = (int) $valores[3];
+        $rango_fin = (int) $valores[4];
+
+        if ($rango_fin > 4) 
+        {
+            // $rango_inicio -= 1;
+            $rango_fin -= 1;
+        }
+
+        // echo "inicio: ".$rango_inicio."</br>";
+        // echo "fin: ".$rango_fin."</br>";
+        // exit;
+        
+        // $this->session->rango_inicio = $rango_inicio;
+        $this->session->rango_fin = $rango_fin;
+        
+        return $response->withRedirect('avance_alumno/'.$id_curso.'/'.$id_seccion.'/'.$id_alumno.'/0');
+    })->setName('anterior_avance');
+
     $app->get('/avance_alumno/{id_curso}/{id_seccion}/{id_alumno}/{id_proyecto}', function($request, $response, $args)
     {
         $error = -1;
@@ -1127,9 +1195,22 @@
         $alumno = $code->ver_alumno($id_curso, $id_seccion, $id_alumno)[0];
         $seccion = $code->ver_seccion($id_curso, $id_seccion)[0];
 
-        $boleta_code = $code->boleta_code($id_curso, $id_seccion, $id_alumno);
+        $rango_inicio = 1;
+        $rango_fin = 4;
+
+        if ($this->session->exists('rango_fin')) 
+        {
+            $rango_fin = $this->session->rango_fin;
+            
+            $this->session->delete('rango_fin');
+        }
+
+        // $boleta_code = $code->boleta_code($id_curso, $id_seccion, $id_alumno);
+        $boleta_code = $code->boleta_code_rango($id_curso, $id_seccion, $id_alumno, $rango_inicio, $rango_fin);
         $info_boleta = asignar_valores($boleta_code);
-        //var_dump($info_boleta);
+        // echo $rango_inicio."</br>";
+        // echo $rango_fin."</br>";
+        
         
         $boleta_video = $code->boleta_video($id_curso, $id_seccion, $id_alumno);
         $info_video = asignar_valores($boleta_video);
@@ -1183,7 +1264,7 @@
             $row += 1;
         }
 
-        return $this->view->render($response, 'avance_alumno.html', ['info_proy' =>  $info_proy, 'index_curso' => $index_curso ,'index_seccion' => $index_seccion, 'index_alumno' => $index_alumno,'index_proyecto' => $index_proyecto, 'proyectos' => $proyectos, 'noticias'=> $noti,'apoyo'=> $apoyo, 'comentario'=> $comentario, 'info_rubrica'=>$info_rubrica, 'info_pregunta'=>$info_pregunta, 'info_video'=>$info_video, 'info_boleta'=>$info_boleta,'seccion'=> $seccion,'alumno' => $alumno, 'error'=> $error]);
+        return $this->view->render($response, 'avance_alumno.html', ['rango_inicio' => $rango_inicio, 'rango_fin' => $rango_fin, 'info_proy' =>  $info_proy, 'index_curso' => $index_curso ,'index_seccion' => $index_seccion, 'index_alumno' => $index_alumno,'index_proyecto' => $index_proyecto, 'proyectos' => $proyectos, 'noticias'=> $noti,'apoyo'=> $apoyo, 'comentario'=> $comentario, 'info_rubrica'=>$info_rubrica, 'info_pregunta'=>$info_pregunta, 'info_video'=>$info_video, 'info_boleta'=>$info_boleta,'seccion'=> $seccion,'alumno' => $alumno, 'error'=> $error]);
     })->setName('avance_alumno');
 
     $app->post('/seleccion_de_proyecto', function($request, $response, $args)
@@ -1327,6 +1408,7 @@
         return $response->withRedirect($this->router->pathFor('enviar_boletas'));
     })->setName('busqueda_tipo_envio');
 
+    //enviar boletas a los representantes y profesores
     $app->get('/enviar_avance', function($request, $response, $args)
     {
         $index_curso = -1;
@@ -1457,7 +1539,6 @@
 
     }
 
-    // busqueda_sesiones_boleta
     $app->post('/busqueda_curso_boleta', function($request, $response, $args)
     {
         foreach($request->getParsedBody() as $key => $value)
@@ -1520,7 +1601,6 @@
         return $response->withRedirect($this->router->pathFor('generar_boletas'));
     })->setName('busqueda_alumno_boleta');
 
-    //labor social
     $app->post('/carga_datos_config', function($request, $response, $args)
     {
         foreach($request->getParsedBody() as $key => $value)
