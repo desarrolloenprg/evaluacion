@@ -1444,13 +1444,16 @@
                         foreach ($representates as $info)
                         {
                             $id_alumno = $code->ver_alumno_dni($id_curso, $id_seccion, $info[2])[0];
-                            $mail = "http://127.0.0.1/prg-test/index.php/avance_alumno/".$id_curso."/".$id_seccion."/".$id_alumno["ID"]."/0";
+                            // $mail = "http://www.progracademy.org/prg-test/index.php/enviar_avance/".$id_curso."/".$id_seccion."/".$id_alumno["ID"]."/0";
+                            $mail = ' <p>Estimados representantes en esta dirección <a  href="http://www.progracademy.org/prg-test/index.php/avance_alumno/'.$id_curso.'/'.$id_seccion.'/'.$id_alumno["ID"].'/0"> link </a> encontrarán el informe de progreso se su representado. </p> ';
                            
                             //Titulo
-                            $titulo = "PRUEBA DE TITULO";
+                            $titulo = "Informe de Evaluación a la fecha";
+
                             //cabecera
                             $headers = "MIME-Version: 1.0\r\n"; 
-                            $headers .= "Content-type: text/html; charset=iso-8859-1\r\n"; 
+                            $headers .= "From: progracademy.org\r\n";
+
                             //dirección del remitente 
                             $headers .= "From: Geeky Theory < tu_dirección_email >\r\n";
                             //Enviamos el mensaje a tu_dirección_email 
@@ -1475,15 +1478,17 @@
                             foreach ($alumnos as $id=>$nombre) 
                             {
                                 // echo "id: ".$id.", nombre: ".$nombre."</br>";
-                                // echo $profesor[1];
+                                // echo $profesor[1]."</br>";
+                                // exit;
                                  //Titulo
-                                $mail = "http://127.0.0.1/prg-test/index.php/avance_alumno/".$id_curso."/".$id_seccion."/".$id."/0";
-                                $titulo = "PRUEBA DE TITULO";
+                                $mail = ' <p>Estimados representantes en esta dirección <a  href="http://www.progracademy.org/prg-test/index.php/avance_alumno/'.$id_curso.'/'.$id_seccion.'/'.$id.'/0"> link </a> encontrarán el informe de progreso se su representado. </p> ';
+                                
+                                $titulo = "Informe de Evaluación a la fecha";
                                 //cabecera
                                 $headers = "MIME-Version: 1.0\r\n"; 
                                 $headers .= "Content-type: text/html; charset=iso-8859-1\r\n"; 
                                 //dirección del remitente 
-                                $headers .= "From: Geeky Theory < tu_dirección_email >\r\n";
+                                $headers .= "From: progracademy.org\r\n";
                                 //Enviamos el mensaje a tu_dirección_email 
                                 $bool = mail($profesor[1], $titulo, $mail, $headers);
                                 if($bool){
