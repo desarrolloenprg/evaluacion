@@ -181,7 +181,7 @@ class Conexion
         $this->conectar();
         if($this->conexion)
         {
-            $query = "SELECT ID FROM VIDEO WHERE NOMBRE='".$nombre."' AND OBJETIVOS=".$objetivo." AND TOTAL=".$total." ";
+            $query = "SELECT ID FROM VIDEO WHERE NOMBRE='".$nombre."' AND OBJETIVOS=".round($objetivo)." AND TOTAL=".round($total)." ";
             $resultado = mysqli_query($this->conexion, $query);
             if($resultado) { 
                 $filas = mysqli_fetch_assoc($resultado);
@@ -459,6 +459,7 @@ class Conexion
     public function agregar_objetivo_video($id_video, $id_sesion)
     {
         $respuesta = $this->existe_objetivo_video($id_video, $id_sesion);
+
         $this->conectar();
         if($this->conexion && $respuesta < 0)
         {
@@ -627,6 +628,7 @@ class Conexion
     public function agregar_video($nombre, $objetivo, $total)
     {
         $respuesta = $this->existe_video($nombre, $objetivo, $total);
+
         $this->conectar();
         if($this->conexion && $respuesta < 0)
         {
@@ -1649,6 +1651,27 @@ class Conexion
         if($this->conexion)
         {
             $query = "SELECT DISTINCT se.ID, se.NUMERO, se.FECHA FROM SESION as se, CURSO as cu, ALUMNO as al, AVANCE_VIDEO as av, VIDEO as vi, OBJETIVO_VIDEO as obj, SECCION as sec WHERE se.FK_CURSO_ID=cu.ID AND sec.FK_CURSO_ID=cu.ID AND al.FK_SECCION_ID=sec.ID AND av.FK_ALUMNO_ID=al.ID AND vi.ID=av.FK_VIDEO_ID AND obj.FK_VIDEO_ID=vi.ID AND obj.FK_SESION_ID=se.ID AND cu.ID=".$id_curso." AND al.ID=".$id_alumno." ORDER BY se.FECHA DESC";
+            if($resultado = mysqli_query($this->conexion, $query))
+            {
+                $i = 0;
+                while ($filas = $resultado->fetch_assoc())
+                {
+                    $matriz[$i++] = $filas;
+                }
+                $resultado->free();
+            }
+            $this->desconectar();
+        }
+        return $matriz;
+    }
+
+    public function ver_sesiones_alumno_video_rango($id_curso, $id_alumno, $rango_inicio, $rango_fin)
+    {
+        $matriz = [];
+        $this->conectar();
+        if($this->conexion)
+        {
+            $query = "SELECT DISTINCT se.ID, se.NUMERO, se.FECHA FROM SESION as se, CURSO as cu, ALUMNO as al, AVANCE_VIDEO as av, VIDEO as vi, OBJETIVO_VIDEO as obj, SECCION as sec WHERE se.FK_CURSO_ID=cu.ID AND sec.FK_CURSO_ID=cu.ID AND al.FK_SECCION_ID=sec.ID AND av.FK_ALUMNO_ID=al.ID AND vi.ID=av.FK_VIDEO_ID AND obj.FK_VIDEO_ID=vi.ID AND obj.FK_SESION_ID=se.ID AND cu.ID=".$id_curso." AND al.ID=".$id_alumno." ORDER BY se.FECHA DESC LIMIT ".$rango_inicio.", ".$rango_fin." ";
             if($resultado = mysqli_query($this->conexion, $query))
             {
                 $i = 0;

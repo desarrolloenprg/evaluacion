@@ -22,7 +22,8 @@ class Code
         // $this->hoja_seccion = $hoja_seccion;
         $this->google = new Google();
         $id_sesion = -1;
-        try {
+        try 
+        {
             $matriz = $this->google->matriz($id_seccion, $hoja_seccion.'!'.$rango);
             $id_curso = $this->agregar_curso($matriz);
             if ($id_curso > 0)
@@ -158,6 +159,8 @@ class Code
             // nombre, objetivo, totales
             $id_video = $this->cone->agregar_video($matriz[1][5], $matriz[2][1], $matriz[3][1]);
 
+            // echo "id_video: ".$id_video."</br>";
+
             $this->cone->agregar_objetivo_video($id_video, $id_sesion);
             $this->cone->agregar_avance_video($id_video, $id_seccion, $matriz);
 
@@ -166,6 +169,8 @@ class Code
         {
             return $e;
         }
+
+        // exit;
         return $id_sesion;
     }
 
@@ -482,6 +487,27 @@ class Code
         $matriz_aux = [];
         $matriz = [];
         $sesiones = $this->cone->ver_sesiones_alumno_video($id_curso, $id_alumno);
+        for($i=0; $i < count($sesiones); $i++)
+        {
+            if($i < count($sesiones)-1)
+            {
+                $matriz_aux = $this->cone->boleta_video($sesiones[$i]["ID"], $sesiones[$i+1]["ID"], $id_curso, $id_seccion, $id_alumno);
+            }
+            else
+            {
+                $matriz_aux = $this->cone->boleta_video_1($sesiones[$i]["ID"], $id_curso, $id_seccion, $id_alumno);
+            }
+            $matriz[] = $matriz_aux;
+        }
+
+        return $matriz;
+    }
+
+    public function boleta_video_rango($id_curso, $id_seccion, $id_alumno, $rango_inicio, $rango_fin)
+    {
+        $matriz_aux = [];
+        $matriz = [];
+        $sesiones = $this->cone->ver_sesiones_alumno_video_rango($id_curso, $id_alumno, $rango_inicio, $rango_fin);
         for($i=0; $i < count($sesiones); $i++)
         {
             if($i < count($sesiones)-1)

@@ -147,44 +147,54 @@
             $id_escuela = $this->session->id_escuela_default;
             $sesiones = $code->fecha_sesiones_escuela($id_escuela);
 
+            //---------------------------------------------------
+            foreach ($sesiones as $id=>$fecha) {
+
+                $matriz_aux = $code->tabla_code($id);
+                $matriz = $code->tabla_code_ini($id, $inicio, $fin);
+                if (count($matriz) == 0) {
+                    unset($sesiones[$id]);
+                }
+            }
+            $matriz = array();
+            //---------------------------------------------------
             // var_dump($sesiones);
+        }
 
-            if($this->session->exists('id_sesion'))
+        if($this->session->exists('id_sesion'))
+        {
+            if($this->session->exists('pagina'))
             {
-                if($this->session->exists('pagina'))
-                {
-                    $pagina = $this->session->pagina;
-                    $inicio = 10 * ($this->session->pagina - 1);
-                    // $fin = $inicio +10;
-                    $fin = 10;
-                    $this->session->delete('pagina');
-                }
-
-                $index = $this->session->id_sesion;
-                $matriz_aux = $code->tabla_code($this->session->id_sesion);
-                $matriz = $code->tabla_code_ini($this->session->id_sesion, $inicio, $fin);
-                $cantidad = ceil(count($matriz_aux)/10);
-                $this->session->delete('id_sesion');
-                // exit;
-                if(count($matriz) == 0)
-                {
-                    $error = 1;
-                }
+                $pagina = $this->session->pagina;
+                $inicio = 10 * ($this->session->pagina - 1);
+                // $fin = $inicio +10;
+                $fin = 10;
+                $this->session->delete('pagina');
             }
 
-            if($this->session->exists('descarga'))
+            $index = $this->session->id_sesion;
+            $matriz_aux = $code->tabla_code($this->session->id_sesion);
+            $matriz = $code->tabla_code_ini($this->session->id_sesion, $inicio, $fin);
+            $cantidad = ceil(count($matriz_aux)/10);
+            $this->session->delete('id_sesion');
+            // exit;
+            if(count($matriz) == 0)
             {
-                $descarga = $this->sesion->descarga;
-                $this->session->delete('descarga');
-            }
-
-            if($this->session->exists('error'))
-            {
-                $error = $this->session->error;
-                $this->session->delete('error');
+                $error = 1;
             }
         }
 
+        if($this->session->exists('descarga'))
+        {
+            $descarga = $this->sesion->descarga;
+            $this->session->delete('descarga');
+        }
+
+        if($this->session->exists('error'))
+        {
+            $error = $this->session->error;
+            $this->session->delete('error');
+        }
         return $this->view->render($response, 'reporte_code.html', ['pais_default' => $pais_default, 'escuela_default' => $escuela_default, 'error'=>$error, 'pagina'=>$pagina, 'cantidad'=>$cantidad ,'descarga' => $descarga, 'index'=>$index, 'sesiones'=>$sesiones, 'matriz'=>$matriz]);
     })->setName('reporte_code');
 
@@ -622,6 +632,18 @@
             $escuela_default = $lista_escuelas[$this->session->id_escuela_default];
             $id_escuela = $this->session->id_escuela_default;
             $sesiones = $code->fecha_sesiones_escuela($id_escuela);
+
+            //---------------------------------------------------
+            foreach ($sesiones as $id=>$fecha) {
+
+                $matriz_aux = $code->tabla_video($id);
+                $matriz = $code->tabla_video_ini($id, $inicio, $fin);
+                if (count($matriz) == 0) {
+                    unset($sesiones[$id]);
+                }
+            }
+            $matriz = array();
+            //---------------------------------------------------
         }
 
 
@@ -688,6 +710,18 @@
             $escuela_default = $lista_escuelas[$this->session->id_escuela_default];
             $id_escuela = $this->session->id_escuela_default;
             $sesiones = $code->fecha_sesiones_escuela($id_escuela);
+
+            //---------------------------------------------------
+            foreach ($sesiones as $id=>$fecha) {
+
+                $matriz_aux = $code->tabla_pregunta($id);
+                $matriz = $code->tabla_pregunta_ini($id, $inicio, $fin);
+                if (count($matriz) == 0) {
+                    unset($sesiones[$id]);
+                }
+            }
+            $matriz = array();
+            //---------------------------------------------------
         }
 
         if($this->session->exists('id_sesion'))
@@ -1211,8 +1245,7 @@
         // echo $rango_inicio."</br>";
         // echo $rango_fin."</br>";
         
-        
-        $boleta_video = $code->boleta_video($id_curso, $id_seccion, $id_alumno);
+        $boleta_video = $code->boleta_video_rango($id_curso, $id_seccion, $id_alumno, $rango_inicio, $rango_fin);
         $info_video = asignar_valores($boleta_video);
         //var_dump($info_video);
         $boleta_pregunta = $code->boleta_pregunta($id_curso, $id_seccion, $id_alumno);
