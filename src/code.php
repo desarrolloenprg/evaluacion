@@ -157,7 +157,7 @@ class Code
                 $id_sesion = $this->agregar_sesion($id_curso, $matriz);
             }
             // nombre, objetivo, totales
-            $id_video = $this->cone->agregar_video($matriz[1][5], $matriz[2][1], $matriz[3][1]);
+            $id_video = $this->cone->agregar_video($matriz[1][5], round($matriz[2][1]), round($matriz[3][1]));
 
             // echo "id_video: ".$id_video."</br>";
 
@@ -200,7 +200,7 @@ class Code
             }
 
             //objetivos, totales, sesion
-            $id_pregunta = $this->cone->agregar_pregunta($matriz[2][1], $matriz[3][1], $id_sesion);
+            $id_pregunta = $this->cone->agregar_pregunta(round($matriz[2][1]), round($matriz[3][1]), $id_sesion);
             $this->cone->agregar_avance_pregunta($id_pregunta, $id_seccion, $matriz);
 
         }
@@ -478,6 +478,10 @@ class Code
             }
             $matriz[] = $matriz_aux;
         }
+        // foreach ($matriz as $fila) {
+        //     var_dump($fila);
+        //     echo "</br> </br>";
+        // }
 
         return $matriz;
     }
@@ -507,7 +511,9 @@ class Code
     {
         $matriz_aux = [];
         $matriz = [];
+        
         $sesiones = $this->cone->ver_sesiones_alumno_video_rango($id_curso, $id_alumno, $rango_inicio, $rango_fin);
+
         for($i=0; $i < count($sesiones); $i++)
         {
             if($i < count($sesiones)-1)
@@ -521,6 +527,11 @@ class Code
             $matriz[] = $matriz_aux;
         }
 
+        // foreach ($matriz as $fila) {
+        //     var_dump($fila);
+        //     echo "</br> </br>";
+        // }
+
         return $matriz;
     }
 
@@ -529,6 +540,36 @@ class Code
         $matriz_aux = [];
         $matriz = [];
         $sesiones = $this->cone->ver_sesiones_alumno_pregunta($id_curso, $id_alumno);
+        
+        for($i=0; $i < count($sesiones); $i++)
+        {
+            if($i < count($sesiones)-1)
+            {
+                $matriz_aux = $this->cone->boleta_pregunta($sesiones[$i]["ID"], $sesiones[$i+1]["ID"], $id_curso, $id_seccion, $id_alumno);
+            }
+            else
+            {
+                $matriz_aux = $this->cone->boleta_pregunta_1($sesiones[$i]["ID"], $id_curso, $id_seccion, $id_alumno);
+            }
+            $matriz[] = $matriz_aux;
+        }
+        
+        // var_dump($matriz);
+
+        // foreach ($matriz as $fila) {
+        //     var_dump($fila);
+        //     echo "</br> </br>";
+        // }
+
+        // exit;
+        return $matriz;
+    }
+
+    public function boleta_pregunta_rango($id_curso, $id_seccion, $id_alumno, $rango_inicio, $rango_fin)
+    {
+        $matriz_aux = [];
+        $matriz = [];
+        $sesiones = $this->cone->ver_sesiones_alumno_pregunta_rango($id_curso, $id_alumno, $rango_inicio, $rango_fin);
         for($i=0; $i < count($sesiones); $i++)
         {
             if($i < count($sesiones)-1)

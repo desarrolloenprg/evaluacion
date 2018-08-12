@@ -134,7 +134,8 @@
                     // 'rgba(255, 87, 34, 0.9)',
                     //--------------------------------------------------------
 
-                    var inicio = {{ info_boleta.tam|json_encode() }};
+                    // var inicio = {{ info_boleta.tam|json_encode() }};
+                    var inicio = parseInt("{{rango_fin}}");
                     // var inicio = 3;
                     var labels = [];
 
@@ -260,8 +261,8 @@
                 <script>
                     //------------------------------------------------------------
 
-                    var inicio = {{ info_video.tam|json_encode() }};
-
+                    // var inicio = {{ info_video.tam|json_encode() }};
+                    var inicio = parseInt("{{rango_fin}}");
                     // var inicio = 3;
                     var labels_video = [];
 
@@ -380,7 +381,9 @@
                 <canvas style="max-width:450px; max-height:450px; margin: 0 auto; float:none;" id="prueba2" width="200" height="200"></canvas>
                 <script>
                     //------------------------------------------------------------
-                    var inicio = {{ info_pregunta.tam|json_encode() }};
+                    // var inicio = {{ info_pregunta.tam|json_encode() }};
+                    var inicio = parseInt("{{ rango_fin }}");
+
                     // var inicio = 3;
                     var labels_pregunta = [];
 
@@ -406,35 +409,6 @@
                     var info_cum_target = '{{info_pregunta.ACUM_TARGET }}';
                     var data_acum_target = info_cum_target.split(';');
 
-                    // var grafica_pregunta_acumulado = {
-                    //     labels: labels_pregunta,
-                    //     datasets: [
-                    //     {
-                    //         type: 'bar',
-                    //         label: 'Obligatorio Acum',
-                    //         backgroundColor: color_oblig_acum,
-                    //         data: data_obligatorio_acum,
-                    //         borderColor: border_color_acum,
-                    //         borderWidth: 2
-                    //     },
-                    //     {
-                    //         type: 'bar',
-                    //         label: 'General Acum',
-                    //         backgroundColor: color_general_acum,
-                    //         data: data_general_acumulado,
-                    //         borderColor: border_color_general_acum,
-                    //         borderWidth: 2
-                    //     },
-                    //     {
-                    //         type: 'line',
-                    //         label: 'Acum Target',
-                    //         borderColor: 'rgba(127, 140, 141,1.0)',
-                    //         borderWidth: 2,
-                    //         fill: false,
-                    //         data: data_acum_target
-                    //     }
-                    // ]
-                    // };
                     //------------------------------------------------------------
                     var ctx_2 = document.getElementById("prueba2").getContext('2d');
                     var myChart = new Chart(ctx_2, {
@@ -513,7 +487,9 @@
 
                 <canvas style="max-width:450px; max-height:450px; margin: 0 auto; float:none;" id="prueba3" width="200" height="200"></canvas>
                 <script>
-                    var inicio = {{ info_rubrica.tam|json_encode() }};
+                    // var inicio = {{ info_rubrica.tam|json_encode() }};
+                    var inicio = parseInt("{{rango_fin}}");
+
                     // var inicio = 3;
                     var labels_rubrica = [];
 

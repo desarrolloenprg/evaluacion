@@ -1229,8 +1229,8 @@
         $alumno = $code->ver_alumno($id_curso, $id_seccion, $id_alumno)[0];
         $seccion = $code->ver_seccion($id_curso, $id_seccion)[0];
 
-        $rango_inicio = 1;
-        $rango_fin = 4;
+        $rango_inicio = 0;
+        $rango_fin = 8;
 
         if ($this->session->exists('rango_fin')) 
         {
@@ -1245,15 +1245,20 @@
         // echo $rango_inicio."</br>";
         // echo $rango_fin."</br>";
         
+        // $boleta_video = $code->boleta_video($id_curso, $id_seccion, $id_alumno);
         $boleta_video = $code->boleta_video_rango($id_curso, $id_seccion, $id_alumno, $rango_inicio, $rango_fin);
         $info_video = asignar_valores($boleta_video);
         //var_dump($info_video);
-        $boleta_pregunta = $code->boleta_pregunta($id_curso, $id_seccion, $id_alumno);
-        $info_pregunta = asignar_valores($boleta_pregunta);
         
+        $boleta_pregunta = $code->boleta_pregunta($id_curso, $id_seccion, $id_alumno);
+        // $boleta_pregunta = $code->boleta_pregunta_rango($id_curso, $id_seccion, $id_alumno, $rango_inicio, $rango_fin);
+        $info_pregunta = asignar_valores($boleta_pregunta);
+        // var_dump($info_pregunta);
+        // exit;
+
         $info_rubrica = NULL;
 
-        if ($id_proyecto > 0){
+        if ($id_proyecto > 0) {
             $info_rubrica = $code->boleta_rubrica($id_curso, $id_seccion, $id_alumno, $id_proyecto);
         }
         //var_dump($info_pregunta);
