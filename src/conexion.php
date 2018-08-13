@@ -886,10 +886,14 @@ class Conexion
 
     public function boleta_pregunta($id_sesion, $id_sesion1, $id_curso, $id_seccion, $id_alumno)
     {
+        // echo "ses: ".$id_sesion."</br>";
+        // echo "ses1: ".$id_sesion1."</br>";
+        // exit;
         $matriz = [];
         $this->conectar();
         if($this->conexion)
         {
+            // $query = "SELECT av.TOTAL as OBLIGATORIO_ACUM, av.OBJETIVOS as GENERAL_ACUMULADO, pre.OBJETIVOS as ACUM_TARGET, (av.TOTAL-av1.TOTAL) as SESION_OBLIGATORIO, (av.OBJETIVOS-av1.OBJETIVOS) as SESION_GENERAL, (pre.OBJETIVOS-pre1.OBJETIVOS) as SESION_TARGET FROM SECCION as sec, CURSO as cu, ALUMNO as al, SESION as se, AVANCE_PREGUNTA as av, SESION as se1, AVANCE_PREGUNTA as av1 , ALUMNO as al1, PREGUNTA as pre, PREGUNTA as pre1 WHERE cu.ID=sec.FK_CURSO_ID AND al.FK_SECCION_ID=sec.ID AND se.FK_CURSO_ID=cu.ID AND av.FK_ALUMNO_ID=al.ID AND av1.FK_ALUMNO_ID=al1.ID AND al1.DNI=al.DNI AND av1.FK_PREGUNTA_ID=pre1.ID AND av.FK_PREGUNTA_ID=pre.ID AND se.ID=".$id_sesion." AND se1.ID=".$id_sesion1." AND cu.ID=".$id_curso." AND sec.ID=".$id_seccion." AND al.ID=".$id_alumno." ";
             $query = "SELECT av.TOTAL as OBLIGATORIO_ACUM, av.OBJETIVOS as GENERAL_ACUMULADO, pre.OBJETIVOS as ACUM_TARGET, (av.TOTAL-av1.TOTAL) as SESION_OBLIGATORIO, (av.OBJETIVOS-av1.OBJETIVOS) as SESION_GENERAL, (pre.OBJETIVOS-pre1.OBJETIVOS) as SESION_TARGET FROM SECCION as sec, CURSO as cu, ALUMNO as al, SESION as se, AVANCE_PREGUNTA as av, SESION as se1, AVANCE_PREGUNTA as av1 , ALUMNO as al1, PREGUNTA as pre, PREGUNTA as pre1 WHERE cu.ID=sec.FK_CURSO_ID AND al.FK_SECCION_ID=sec.ID AND se.FK_CURSO_ID=cu.ID AND av.FK_ALUMNO_ID=al.ID AND av1.FK_ALUMNO_ID=al1.ID AND al1.DNI=al.DNI AND av1.FK_PREGUNTA_ID=pre1.ID AND av.FK_PREGUNTA_ID=pre.ID AND se.ID=".$id_sesion." AND se1.ID=".$id_sesion1." AND cu.ID=".$id_curso." AND sec.ID=".$id_seccion." AND al.ID=".$id_alumno." ";
             if($resultado = mysqli_query($this->conexion, $query))
             {
@@ -1608,7 +1612,8 @@ class Conexion
         $this->conectar();
         if($this->conexion)
         {
-            $query = "SELECT se.ID, se.NUMERO, se.FECHA FROM SESION as se, CURSO as cu, ALUMNO as al, AVANCE_CODE as av WHERE se.FK_CURSO_ID=cu.ID AND av.FK_SESION_ID=se.ID AND av.FK_ALUMNO_ID=al.ID AND al.ID=".$id_alumno." AND cu.ID=".$id_curso." ORDER BY se.FECHA DESC";
+            // $query = "SELECT se.ID, se.NUMERO, se.FECHA FROM SESION as se, CURSO as cu, ALUMNO as al, AVANCE_CODE as av WHERE se.FK_CURSO_ID=cu.ID AND av.FK_SESION_ID=se.ID AND av.FK_ALUMNO_ID=al.ID AND al.ID=".$id_alumno." AND cu.ID=".$id_curso." ORDER BY se.FECHA DESC";
+            $query = "SELECT se.ID, se.NUMERO, se.FECHA FROM SESION as se, CURSO as cu, ALUMNO as al, AVANCE_CODE as av WHERE se.FK_CURSO_ID=cu.ID AND av.FK_SESION_ID=se.ID AND av.FK_ALUMNO_ID=al.ID AND al.ID=".$id_alumno." AND cu.ID=".$id_curso." ORDER BY se.FECHA";
             if($resultado = mysqli_query($this->conexion, $query))
             {
                 $i = 0;
@@ -1629,7 +1634,8 @@ class Conexion
         $this->conectar();
         if($this->conexion)
         {
-            $query = "SELECT se.ID, se.NUMERO, se.FECHA FROM SESION as se, CURSO as cu, ALUMNO as al, AVANCE_CODE as av WHERE se.FK_CURSO_ID=cu.ID AND av.FK_SESION_ID=se.ID AND av.FK_ALUMNO_ID=al.ID AND al.ID=".$id_alumno." AND cu.ID=".$id_curso." ORDER BY se.FECHA DESC LIMIT ".$rango_inicio.", ".$rango_fin." ";
+            // $query = "SELECT se.ID, se.NUMERO, se.FECHA FROM SESION as se, CURSO as cu, ALUMNO as al, AVANCE_CODE as av WHERE se.FK_CURSO_ID=cu.ID AND av.FK_SESION_ID=se.ID AND av.FK_ALUMNO_ID=al.ID AND al.ID=".$id_alumno." AND cu.ID=".$id_curso." ORDER BY se.FECHA DESC LIMIT ".$rango_inicio.", ".$rango_fin." ";
+            $query = "SELECT se.ID, se.NUMERO, se.FECHA FROM SESION as se, CURSO as cu, ALUMNO as al, AVANCE_CODE as av WHERE se.FK_CURSO_ID=cu.ID AND av.FK_SESION_ID=se.ID AND av.FK_ALUMNO_ID=al.ID AND al.ID=".$id_alumno." AND cu.ID=".$id_curso." ORDER BY se.FECHA LIMIT ".$rango_inicio.", ".$rango_fin." ";
             if($resultado = mysqli_query($this->conexion, $query))
             {
                 $i = 0;
@@ -1650,7 +1656,8 @@ class Conexion
         $this->conectar();
         if($this->conexion)
         {
-            $query = "SELECT DISTINCT se.ID, se.NUMERO, se.FECHA FROM SESION as se, CURSO as cu, ALUMNO as al, AVANCE_VIDEO as av, VIDEO as vi, OBJETIVO_VIDEO as obj, SECCION as sec WHERE se.FK_CURSO_ID=cu.ID AND sec.FK_CURSO_ID=cu.ID AND al.FK_SECCION_ID=sec.ID AND av.FK_ALUMNO_ID=al.ID AND vi.ID=av.FK_VIDEO_ID AND obj.FK_VIDEO_ID=vi.ID AND obj.FK_SESION_ID=se.ID AND cu.ID=".$id_curso." AND al.ID=".$id_alumno." ORDER BY se.FECHA DESC";
+            // $query = "SELECT DISTINCT se.ID, se.NUMERO, se.FECHA FROM SESION as se, CURSO as cu, ALUMNO as al, AVANCE_VIDEO as av, VIDEO as vi, OBJETIVO_VIDEO as obj, SECCION as sec WHERE se.FK_CURSO_ID=cu.ID AND sec.FK_CURSO_ID=cu.ID AND al.FK_SECCION_ID=sec.ID AND av.FK_ALUMNO_ID=al.ID AND vi.ID=av.FK_VIDEO_ID AND obj.FK_VIDEO_ID=vi.ID AND obj.FK_SESION_ID=se.ID AND cu.ID=".$id_curso." AND al.ID=".$id_alumno." ORDER BY se.FECHA DESC";
+            $query = "SELECT DISTINCT se.ID, se.NUMERO, se.FECHA FROM SESION as se, CURSO as cu, ALUMNO as al, AVANCE_VIDEO as av, VIDEO as vi, OBJETIVO_VIDEO as obj, SECCION as sec WHERE se.FK_CURSO_ID=cu.ID AND sec.FK_CURSO_ID=cu.ID AND al.FK_SECCION_ID=sec.ID AND av.FK_ALUMNO_ID=al.ID AND vi.ID=av.FK_VIDEO_ID AND obj.FK_VIDEO_ID=vi.ID AND obj.FK_SESION_ID=se.ID AND cu.ID=".$id_curso." AND al.ID=".$id_alumno." ORDER BY se.FECHA";
             if($resultado = mysqli_query($this->conexion, $query))
             {
                 $i = 0;
@@ -1671,7 +1678,8 @@ class Conexion
         $this->conectar();
         if($this->conexion)
         {
-            $query = "SELECT DISTINCT se.ID, se.NUMERO, se.FECHA FROM SESION as se, CURSO as cu, ALUMNO as al, AVANCE_VIDEO as av, VIDEO as vi, OBJETIVO_VIDEO as obj, SECCION as sec WHERE se.FK_CURSO_ID=cu.ID AND sec.FK_CURSO_ID=cu.ID AND al.FK_SECCION_ID=sec.ID AND av.FK_ALUMNO_ID=al.ID AND vi.ID=av.FK_VIDEO_ID AND obj.FK_VIDEO_ID=vi.ID AND obj.FK_SESION_ID=se.ID AND cu.ID=".$id_curso." AND al.ID=".$id_alumno." ORDER BY se.FECHA DESC LIMIT ".$rango_inicio.", ".$rango_fin." ";
+            // $query = "SELECT DISTINCT se.ID, se.NUMERO, se.FECHA FROM SESION as se, CURSO as cu, ALUMNO as al, AVANCE_VIDEO as av, VIDEO as vi, OBJETIVO_VIDEO as obj, SECCION as sec WHERE se.FK_CURSO_ID=cu.ID AND sec.FK_CURSO_ID=cu.ID AND al.FK_SECCION_ID=sec.ID AND av.FK_ALUMNO_ID=al.ID AND vi.ID=av.FK_VIDEO_ID AND obj.FK_VIDEO_ID=vi.ID AND obj.FK_SESION_ID=se.ID AND cu.ID=".$id_curso." AND al.ID=".$id_alumno." ORDER BY se.FECHA DESC LIMIT ".$rango_inicio.", ".$rango_fin." ";
+            $query = "SELECT DISTINCT se.ID, se.NUMERO, se.FECHA FROM SESION as se, CURSO as cu, ALUMNO as al, AVANCE_VIDEO as av, VIDEO as vi, OBJETIVO_VIDEO as obj, SECCION as sec WHERE se.FK_CURSO_ID=cu.ID AND sec.FK_CURSO_ID=cu.ID AND al.FK_SECCION_ID=sec.ID AND av.FK_ALUMNO_ID=al.ID AND vi.ID=av.FK_VIDEO_ID AND obj.FK_VIDEO_ID=vi.ID AND obj.FK_SESION_ID=se.ID AND cu.ID=".$id_curso." AND al.ID=".$id_alumno." ORDER BY se.FECHA LIMIT ".$rango_inicio.", ".$rango_fin." ";
             if($resultado = mysqli_query($this->conexion, $query))
             {
                 $i = 0;
@@ -1692,7 +1700,8 @@ class Conexion
         $this->conectar();
         if($this->conexion)
         {
-            $query = "SELECT DISTINCT se.ID, se.NUMERO, se.FECHA FROM SESION as se, CURSO as cu, ALUMNO as al, AVANCE_PREGUNTA as av, PREGUNTA as pre, SECCION as sec WHERE pre.FK_SESION_ID=se.ID AND av.FK_PREGUNTA_ID=pre.ID AND av.FK_ALUMNO_ID=al.ID AND se.FK_CURSO_ID=cu.ID AND cu.ID=".$id_curso." AND al.ID=".$id_alumno." ORDER BY se.FECHA DESC";
+            $query = "SELECT DISTINCT se.ID, se.NUMERO, se.FECHA FROM SESION as se, CURSO as cu, ALUMNO as al, AVANCE_PREGUNTA as av, PREGUNTA as pre, SECCION as sec WHERE pre.FK_SESION_ID=se.ID AND av.FK_PREGUNTA_ID=pre.ID AND av.FK_ALUMNO_ID=al.ID AND se.FK_CURSO_ID=cu.ID AND cu.ID=".$id_curso." AND al.ID=".$id_alumno." ORDER BY se.FECHA";
+            // $query = "SELECT DISTINCT se.ID, se.NUMERO, se.FECHA FROM SESION as se, CURSO as cu, ALUMNO as al, AVANCE_PREGUNTA as av, PREGUNTA as pre, SECCION as sec WHERE pre.FK_SESION_ID=se.ID AND av.FK_PREGUNTA_ID=pre.ID AND av.FK_ALUMNO_ID=al.ID AND se.FK_CURSO_ID=cu.ID AND cu.ID=".$id_curso." AND al.ID=".$id_alumno." ORDER BY se.FECHA DESC";
             if($resultado = mysqli_query($this->conexion, $query))
             {
                 $i = 0;
