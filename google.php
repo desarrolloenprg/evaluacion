@@ -70,7 +70,7 @@
             try
             {
                 // $this->comprobar_hoja($id_documento, $hoja); no funciona metodo revisar
-                $busqueda = $hoja."!E1:F1";
+                $busqueda = $hoja."!A1:B1";
                 $resultado = $this->servicio->spreadsheets_values->get($id, $busqueda);
                 $matriz =  $resultado->getValues();  
                 $rango = $matriz[0][1];

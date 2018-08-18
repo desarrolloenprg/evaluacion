@@ -980,46 +980,28 @@
 
         $id = $request->getParsedBody()['id-seccion'];
         $hoja = $request->getParsedBody()['fichero-seccion-hoja'];
-
         // se abre la conexion con Drive
         $google = new Google();
-
         $rango = $google->ver_rango_proyecto($id, $hoja);
-        $valores = explode(";", $rango);
-        $rango_target = $google->ver_sesion_target($id, $hoja);
-        $targets = explode(";", $rango_target);
-        $sesiones_target = [];
-        foreach($targets as $target)
-        {
-            $sesiones_target[] = $google->suma_sesion_target($id, $hoja, $target);
-        }
-
 
         if($rango == NULL || $rango == -1)
         {
             $this->session->error = 1;
             return $response->withRedirect($this->router->pathFor('carga_proyectos'));
         }
-        ;
+    
         $id_sesion = -1;
         // se almacena la data en la bd
         $code = new Code();
         $respuesta = 0;
         try
         {
-            for($i=0; $i < count($valores); $i++)
-            {
-                $respuesta = $code->carga_proyecto($id, $hoja, $valores[$i], $sesiones_target[$i]);
-                if($respuesta  == -10) { break; }
-            }
-
+            $respuesta = $code->carga_proyecto_nuevo($id, $hoja, $rango);
             if($respuesta  == -10)
             {
                 $this->session->error = 10;
                 return $response->withRedirect($this->router->pathFor('carga_proyectos'));
             }
-
-            // $id_sesion = $code->cargar_proyecto($id, $hoja, $rango);
         }
         catch(Exception $e)
         {
@@ -1104,20 +1086,20 @@
                     {
                         $index_alumno = $this->session->id_alumno;
                         $boleta_code = $code->boleta_code($this->session->id_curso, $this->session->id_seccion, $this->session->id_alumno);
-                        $info_boleta = asignar_valores($boleta_code);
+                        // $info_boleta = asignar_valores($boleta_code);
 
                         $boleta_video = $code->boleta_video($this->session->id_curso, $this->session->id_seccion, $this->session->id_alumno);
-                        $info_video = asignar_valores($boleta_video);
+                        // $info_video = asignar_valores($boleta_video);
 
                         $boleta_pregunta = $code->boleta_pregunta($this->session->id_curso, $this->session->id_seccion, $this->session->id_alumno);
-                        $info_pregunta = asignar_valores($boleta_pregunta);
+                        // $info_pregunta = asignar_valores($boleta_pregunta);
 
                         $proyectos = $code->ver_proyectos_alumno($this->session->id_alumno, $this->session->id_seccion, $this->session->id_curso);
 
                         if($this->session->exists('id_proyecto'))
                         {
                             $index_proyecto = $this->session->id_proyecto;
-                            $info_rubrica = $code->boleta_rubrica($index_curso, $index_seccion, $index_alumno, $index_proyecto);
+                            // $info_rubrica = $code->boleta_rubrica($index_curso, $index_seccion, $index_alumno, $index_proyecto);
                             $this->session->delete('id_proyecto');
                         }
 
@@ -1131,7 +1113,8 @@
             }
         }
 
-        return $this->view->render($response, 'generar_boletas.html', ['pais_default' => $pais_default, 'escuela_default' => $escuela_default, 'index_proyecto'=>$index_proyecto, 'proyectos'=>$proyectos, 'info_rubrica'=>$info_rubrica, 'info_pregunta'=>$info_pregunta, 'info_video'=>$info_video, 'info_boleta'=>$info_boleta, 'index_curso'=>$index_curso, 'cursos'=>$cursos, 'index_alumno'=>$index_alumno, 'alumnos'=>$alumnos, 'index_seccion'=>$index_seccion, 'secciones'=>$secciones]);
+        // return $this->view->render($response, 'generar_boletas.html', ['pais_default' => $pais_default, 'escuela_default' => $escuela_default, 'index_proyecto'=>$index_proyecto, 'proyectos'=>$proyectos, 'info_rubrica'=>$info_rubrica, 'info_pregunta'=>$info_pregunta, 'info_video'=>$info_video, 'info_boleta'=>$info_boleta, 'index_curso'=>$index_curso, 'cursos'=>$cursos, 'index_alumno'=>$index_alumno, 'alumnos'=>$alumnos, 'index_seccion'=>$index_seccion, 'secciones'=>$secciones]);
+        return $this->view->render($response, 'generar_boletas.html', ['pais_default' => $pais_default, 'escuela_default' => $escuela_default, 'index_proyecto'=>$index_proyecto, 'proyectos'=>$proyectos, 'index_curso'=>$index_curso, 'cursos'=>$cursos, 'index_alumno'=>$index_alumno, 'alumnos'=>$alumnos, 'index_seccion'=>$index_seccion, 'secciones'=>$secciones]);
     })->setName('generar_boletas');
 
     $app->post('/siguiente_avance', function($request, $response, $args) 
@@ -1210,7 +1193,7 @@
             $error = $this->session->error;
             $this->session->delete('error');
         }
-
+        
         $id_curso = $args["id_curso"];
         $id_seccion =  $args["id_seccion"];
         $id_alumno =  $args["id_alumno"];
@@ -1241,20 +1224,20 @@
 
         // $boleta_code = $code->boleta_code($id_curso, $id_seccion, $id_alumno);
         $boleta_code = $code->boleta_code_rango($id_curso, $id_seccion, $id_alumno, $rango_inicio, $rango_fin);
-        $info_boleta = asignar_valores($boleta_code);
-        // echo $rango_inicio."</br>";
-        // echo $rango_fin."</br>";
-        
+        $info_boleta = asignar_valores_1($boleta_code);
+
         // $boleta_video = $code->boleta_video($id_curso, $id_seccion, $id_alumno);
         $boleta_video = $code->boleta_video_rango($id_curso, $id_seccion, $id_alumno, $rango_inicio, $rango_fin);
-        $info_video = asignar_valores($boleta_video);
+        $info_video = asignar_valores_1($boleta_video);
         //var_dump($info_video);
         
-        $boleta_pregunta = $code->boleta_pregunta($id_curso, $id_seccion, $id_alumno);
-        // $boleta_pregunta = $code->boleta_pregunta_rango($id_curso, $id_seccion, $id_alumno, $rango_inicio, $rango_fin);
-        $info_pregunta = asignar_valores($boleta_pregunta);
+        // $boleta_pregunta = $code->boleta_pregunta($id_curso, $id_seccion, $id_alumno);
+        $boleta_pregunta = $code->boleta_pregunta_rango($id_curso, $id_seccion, $id_alumno, $rango_inicio, $rango_fin);
+        // $info_pregunta = asignar_valores($boleta_pregunta);
+        $info_pregunta =  asignar_valores_1($boleta_pregunta);
         // var_dump($info_pregunta);
         // exit;
+
 
         $info_rubrica = NULL;
 
@@ -1348,6 +1331,24 @@
 
         return $response->withRedirect($this->router->pathFor('generar_boletas'));
     })->setName('busqueda_boleta_proyectos');
+
+    function asignar_valores_1(&$info_valores)
+    {
+        $data["tam"] = count($info_valores);
+        $data["OBLIGATORIO_ACUM"] = null;
+        $data["GENERAL_ACUMULADO"] = null;
+
+        foreach($info_valores as $fila)
+        {
+            if($data["OBLIGATORIO_ACUM"] == null) { $data["OBLIGATORIO_ACUM"] = $fila[0]["OBLIGATORIO_ACUM"];}
+            else{ $data["OBLIGATORIO_ACUM"] = $data["OBLIGATORIO_ACUM"].';'.$fila[0]["OBLIGATORIO_ACUM"]; }
+
+            if($data["GENERAL_ACUMULADO"] == null) { $data["GENERAL_ACUMULADO"] = $fila[0]["GENERAL_ACUMULADO"];}
+            else{ $data["GENERAL_ACUMULADO"] = $data["GENERAL_ACUMULADO"].';'.$fila[0]["GENERAL_ACUMULADO"]; }
+        }
+
+        return $data;
+    }
 
     function asignar_valores(&$info_valores)
     {

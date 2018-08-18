@@ -25,6 +25,9 @@ class Code
         try 
         {
             $matriz = $this->google->matriz($id_seccion, $hoja_seccion.'!'.$rango);
+            // echo "prin_objetivos: ".$matriz[2][1]."</br>";
+            // echo "objetivos: ".$matriz[2][2]."</br>";
+            // exit;
             $id_curso = $this->agregar_curso($matriz);
             if ($id_curso > 0)
             {
@@ -34,8 +37,13 @@ class Code
                 $this->agregar_etapa($id_curso, $vector);
                 $matriz_aux = $this->matriz_etapa_reto($matriz);
                 $this->agregar_reto($id_curso, $matriz_aux);
+                //--------------------------------------------------
+                $principal_objetivos = $matriz[2][1];
+                $principal_total = $matriz[3][1];
+
                 $matriz_aux_1 = $this->matriz_avance_alumno($matriz);
-                $this->agregar_avance_alumno($id_seccion, $id_sesion, $matriz_aux_1);
+                // $this->agregar_avance_alumno($id_seccion, $id_sesion, $matriz_aux_1);
+                $this->cone->agregar_avance_alumno($principal_objetivos, $principal_total, $matriz_aux_1, $id_seccion, $id_sesion);
             }
         }
         catch(Exception $e) { return $e; }
@@ -142,27 +150,34 @@ class Code
         try
         {
             $matriz = $this->google->matriz($id, $hoja.'!'.$rango);
+            $principal_objetivos = $matriz[2][1];
+            $principal_total = $matriz[3][1];
+            // echo "prin_objetivos: ".$principal_objetivos."</br>";
+            // echo "principal_total: ".$principal_total."</br>";
+            // exit;
+
             $id_seccion = $this->cone->existe_seccion($matriz[1][1]);
             if($id_seccion == -1)
             {
                 $id_curso = $this->agregar_curso($matriz);
                 $id_seccion = $this->agregar_seccion($id_curso, $matriz);
             }
-
-
+            
             $id_sesion = $this->existe_sesion($matriz[0][5], $matriz[0][3]);
             if($id_sesion == -1)
             {
                 if ($id_curso == -1) { $id_curso = $this->agregar_curso($matriz); }
                 $id_sesion = $this->agregar_sesion($id_curso, $matriz);
             }
+            
             // nombre, objetivo, totales
             $id_video = $this->cone->agregar_video($matriz[1][5], round($matriz[2][1]), round($matriz[3][1]));
-
+            // echo "video: ".$id_video."";
+            // exit;
             // echo "id_video: ".$id_video."</br>";
 
             $this->cone->agregar_objetivo_video($id_video, $id_sesion);
-            $this->cone->agregar_avance_video($id_video, $id_seccion, $matriz);
+            $this->cone->agregar_avance_video($principal_objetivos, $principal_total, $id_video, $id_seccion, $matriz);
 
         }
         catch(Exeption $e)
@@ -184,6 +199,12 @@ class Code
         try
         {
             $matriz = $this->google->matriz($id, $hoja.'!'.$rango);
+            $principal_objetivos = $matriz[2][1];
+            $principal_total = $matriz[3][1];
+
+            // echo "principal_objetivos: ".$principal_objetivos."</br>";
+            // echo "principal_total: ".$principal_total."</br>";
+            // exit;
             $id_seccion = $this->cone->existe_seccion($matriz[1][1]);
             if($id_seccion == -1)
             {
@@ -201,7 +222,7 @@ class Code
 
             //objetivos, totales, sesion
             $id_pregunta = $this->cone->agregar_pregunta(round($matriz[2][1]), round($matriz[3][1]), $id_sesion);
-            $this->cone->agregar_avance_pregunta($id_pregunta, $id_seccion, $matriz);
+            $this->cone->agregar_avance_pregunta($principal_objetivos, $principal_total, $id_pregunta, $id_seccion, $matriz);
 
         }
         catch(Exeption $e)
@@ -220,6 +241,8 @@ class Code
         {
             $valores = explode("-", $rango);
             $matriz = $this->google->matriz($id, $hoja.'!'.$valores[0]);
+
+
             $matriz_info = $this->google->matriz($id, $hoja.'!A1:H2');
             $lista = explode('-', $matriz_info[0][1]);
             $fecha = $lista[2].'-'.$lista[1].'-'.$lista[0];
@@ -233,6 +256,24 @@ class Code
             {
                 return -10;
             }
+        }
+        catch(Exeption $e)
+        {
+            return $e;
+        }
+        return 1;
+    }
+
+    public function carga_proyecto_nuevo($id, $hoja, $rango)
+    {
+        $this->google = new Google();
+        $id_sesion = -1;
+        $id_curso = -1;
+        try
+        {
+            $matriz = $this->google->matriz($id, $hoja.'!'.$rango);
+            var_dump($matriz);
+            exit;
         }
         catch(Exeption $e)
         {
@@ -343,6 +384,7 @@ class Code
         
         $id_pais = $this->cone->existe_pais($nombre_pais);
         $id_escuela = $this->cone->existe_escuela($id_pais, $nombre_escuela);
+
         if ($id_pais != -1 && $id_escuela != -1)
         {
             try
@@ -354,7 +396,7 @@ class Code
                 throw new Exception("Error al conectarse con la BD.");
             }
         }
-        
+
         return $id_curso;
     }
 
@@ -444,16 +486,21 @@ class Code
         $matriz_aux = [];
         $matriz = [];
         $sesiones = $this->cone->ver_sesiones_alumno_code($id_curso, $id_alumno);
+        // for($i=0; $i < count($sesiones); $i++)
+        // {
+        //     if($i < count($sesiones)-1)
+        //     {
+        //         $matriz_aux = $this->cone->boleta_code($sesiones[$i]["ID"], $sesiones[$i+1]["ID"], $id_curso, $id_seccion, $id_alumno);
+        //     }
+        //     else
+        //     {
+        //         $matriz_aux = $this->cone->boleta_code_1($sesiones[$i]["ID"], $id_curso, $id_seccion, $id_alumno);
+        //     }
+        //     $matriz[] = $matriz_aux;
+        // }
         for($i=0; $i < count($sesiones); $i++)
         {
-            if($i < count($sesiones)-1)
-            {
-                $matriz_aux = $this->cone->boleta_code($sesiones[$i]["ID"], $sesiones[$i+1]["ID"], $id_curso, $id_seccion, $id_alumno);
-            }
-            else
-            {
-                $matriz_aux = $this->cone->boleta_code_1($sesiones[$i]["ID"], $id_curso, $id_seccion, $id_alumno);
-            }
+            $matriz_aux = $this->cone->boleta_code_1($sesiones[$i]["ID"], $id_curso, $id_seccion, $id_alumno);
             $matriz[] = $matriz_aux;
         }
 
@@ -468,21 +515,9 @@ class Code
         
         for($i=0; $i < count($sesiones); $i++)
         {
-            if($i < count($sesiones)-1)
-            {
-                $matriz_aux = $this->cone->boleta_code($sesiones[$i]["ID"], $sesiones[$i+1]["ID"], $id_curso, $id_seccion, $id_alumno);
-            }
-            else
-            {
-                $matriz_aux = $this->cone->boleta_code_1($sesiones[$i]["ID"], $id_curso, $id_seccion, $id_alumno);
-            }
+            $matriz_aux = $this->cone->boleta_code_1($sesiones[$i]["ID"], $id_curso, $id_seccion, $id_alumno);
             $matriz[] = $matriz_aux;
         }
-        // foreach ($matriz as $fila) {
-        //     var_dump($fila);
-        //     echo "</br> </br>";
-        // }
-
         return $matriz;
     }
 
@@ -516,14 +551,7 @@ class Code
 
         for($i=0; $i < count($sesiones); $i++)
         {
-            if($i < count($sesiones)-1)
-            {
-                $matriz_aux = $this->cone->boleta_video($sesiones[$i]["ID"], $sesiones[$i+1]["ID"], $id_curso, $id_seccion, $id_alumno);
-            }
-            else
-            {
-                $matriz_aux = $this->cone->boleta_video_1($sesiones[$i]["ID"], $id_curso, $id_seccion, $id_alumno);
-            }
+            $matriz_aux = $this->cone->boleta_video_1($sesiones[$i]["ID"], $id_curso, $id_seccion, $id_alumno);
             $matriz[] = $matriz_aux;
         }
 
@@ -572,14 +600,7 @@ class Code
         $sesiones = $this->cone->ver_sesiones_alumno_pregunta_rango($id_curso, $id_alumno, $rango_inicio, $rango_fin);
         for($i=0; $i < count($sesiones); $i++)
         {
-            if($i < count($sesiones)-1)
-            {
-                $matriz_aux = $this->cone->boleta_pregunta($sesiones[$i]["ID"], $sesiones[$i+1]["ID"], $id_curso, $id_seccion, $id_alumno);
-            }
-            else
-            {
-                $matriz_aux = $this->cone->boleta_pregunta_1($sesiones[$i]["ID"], $id_curso, $id_seccion, $id_alumno);
-            }
+            $matriz_aux = $this->cone->boleta_pregunta_1($sesiones[$i]["ID"], $id_curso, $id_seccion, $id_alumno);
             $matriz[] = $matriz_aux;
         }
 

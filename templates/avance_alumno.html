@@ -158,9 +158,6 @@
                     var info_general_acumulado = '{{info_boleta.GENERAL_ACUMULADO }}';
                     var data_general_acumulado = info_general_acumulado.split(';');
 
-                    var info_cum_target = '{{info_boleta.ACUM_TARGET }}';
-                    var data_acum_target = info_cum_target.split(';');
-
                     //--------------------------------------------------------
                     var ctx = document.getElementById("prueba").getContext('2d');
                     var myChart = new Chart(ctx, {
@@ -215,44 +212,6 @@
                             }
                         }
                     });
-                    //-------------------------------------------------
-                    // var myChart = new Chart(ctx, {
-                    //     type: 'bar',
-                    //     data: {
-                    //         labels: labels,
-                    //         datasets: [
-                    //         {
-                    //             label: false,
-                    //             data: data_obligatorio_acum,
-                    //             backgroundColor: color_oblig_acum,
-                    //             borderColor: border_color_acum,
-                    //             borderWidth: 1
-                    //         },
-                    //         {
-                    //             label: false,
-                    //             data: data_general_acumulado,
-                    //             backgroundColor: color_general_acum,
-                    //             borderColor: border_color_general_acum,
-                    //             borderWidth: 1
-                    //         }
-                    //         ]
-                    //     },
-                    //     options: {
-                    //         responsive: true,
-                    //         legend: {
-                    //             display:false
-                    //         },
-                    //         scales: {
-                    //             yAxes: [{
-                    //                 ticks: {
-                    //                     beginAtZero:true
-                    //                 }
-                    //             }]
-                    //         }
-                    //     }
-                    // });
-
-
                 </script>
             </div>
             <div class="col-md-6">
