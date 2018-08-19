@@ -637,6 +637,60 @@ class Code
         return $matriz;
     }
 
+
+    public function boleta_rubrica_nuevo($id_curso, $id_seccion, $id_alumno) 
+    {
+        $google = new Google();
+        $rango_hojas = $google->ver_rango_hojas_rubrica('1n8WU8uHO2aoS5gux1z32rq7Ryw3KoHUbWGlg2cb_jKE', 'config');
+        $lista_hojas = $google->matriz('1n8WU8uHO2aoS5gux1z32rq7Ryw3KoHUbWGlg2cb_jKE', 'config!'.$rango_hojas);
+        $resultado = [];
+        $resultado["CALIFICACION"] = null;
+        $resultado["OBJETIVO"] = null;
+
+        $conversion = array(1=>0, 2=>0.5, 3=>1);
+        foreach ($lista_hojas as $hoja) 
+        {
+            $rango = $google->ver_rango('1n8WU8uHO2aoS5gux1z32rq7Ryw3KoHUbWGlg2cb_jKE', $hoja[0]);
+            $matriz = $google->matriz('1n8WU8uHO2aoS5gux1z32rq7Ryw3KoHUbWGlg2cb_jKE', $hoja[0]."!".$rango);
+            // echo $hoja[0]."!".$rango."</br>";
+            $id_curso_1 = $this->cone->existe_curso($matriz[1][1]);
+            if ( $id_curso == $id_curso_1) 
+            {
+                foreach ($matriz as $fila)
+                {
+                    $nombre_seccion = $fila[0];
+                    $id_seccion_1 = $this->cone->existe_seccion($nombre_seccion);
+                    
+                    if ($id_seccion == $id_seccion_1) 
+                    {
+                        // $fila[3];
+                        $lista_datos_persona = explode("-", $fila[3]);
+                        $id_alumno_1 = $this->cone->existe_alumno($lista_datos_persona[1], $id_seccion);
+                        
+                        if ($id_alumno == $id_alumno_1)
+                        {   
+                            // echo $conversion[2]."-".$lista_datos_persona[1].", existe bitches</br>";
+                            $calificacion = $conversion[$fila[5]] + $conversion[$fila[8]] + $conversion[$fila[11]] + $conversion[$fila[14]];
+                            $objetivo = $conversion[$fila[6]] + $conversion[$fila[9]] + $conversion[$fila[12]] + $conversion[$fila[15]];
+                            echo "calificacion: ".$calificacion."</br>";
+                            echo "objetivo: ".$objetivo."</br>";
+
+                            if ($resultado["CALIFICACION"] == null) { $resultado["CALIFICACION"] = (string) $calificacion; }
+                            else { $resultado["CALIFICACION"] =  $resultado["CALIFICACION"].";".$calificacion;}
+
+                            if ($resultado["OBJETIVO"] == null) { $resultado["OBJETIVO"] = (string) $objetivo; }
+                            else { $resultado["OBJETIVO"] =  $resultado["OBJETIVO"].";".$objetivo;}
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        // var_dump($resultado);
+        // exit;
+        return $resultado;
+    }
+
     public function tabla_code_ini($id_sesion, $inicio, $fin)
     {
         $matriz = $this->cone->tabla_code_ini($id_sesion, $inicio, $fin);

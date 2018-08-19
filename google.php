@@ -64,6 +64,24 @@
             return $rango_final;
         }
 
+        public function ver_rango_hojas_rubrica($id_documento, $hoja) 
+        {
+            $rango_final = -1;
+            try
+            {
+                $rango = $hoja.'!A1:B1';
+                $resultado = $this->servicio->spreadsheets_values->get($id_documento, $rango);
+                $matriz =  $resultado->getValues();  
+                $rango_final = $matriz[0][0];
+                
+            }
+            catch(Exception $e)
+            {
+                return -1;
+            }
+            return $rango_final;
+        }
+
         public function ver_rango_proyecto($id, $hoja)
         {
             $rango = -1;

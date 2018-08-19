@@ -980,28 +980,46 @@
 
         $id = $request->getParsedBody()['id-seccion'];
         $hoja = $request->getParsedBody()['fichero-seccion-hoja'];
+
         // se abre la conexion con Drive
         $google = new Google();
+
         $rango = $google->ver_rango_proyecto($id, $hoja);
+        
+        $valores = explode(";", $rango);
+        $rango_target = $google->ver_sesion_target($id, $hoja);
+        $targets = explode(";", $rango_target);
+        $sesiones_target = [];
+        foreach($targets as $target)
+        {
+            $sesiones_target[] = $google->suma_sesion_target($id, $hoja, $target);
+        }
 
         if($rango == NULL || $rango == -1)
         {
             $this->session->error = 1;
             return $response->withRedirect($this->router->pathFor('carga_proyectos'));
         }
-    
+        ;
         $id_sesion = -1;
         // se almacena la data en la bd
         $code = new Code();
         $respuesta = 0;
         try
         {
-            $respuesta = $code->carga_proyecto_nuevo($id, $hoja, $rango);
+            for($i=0; $i < count($valores); $i++)
+            {
+                $respuesta = $code->carga_proyecto($id, $hoja, $valores[$i], $sesiones_target[$i]);
+                if($respuesta  == -10) { break; }
+            }
+
             if($respuesta  == -10)
             {
                 $this->session->error = 10;
                 return $response->withRedirect($this->router->pathFor('carga_proyectos'));
             }
+
+            // $id_sesion = $code->cargar_proyecto($id, $hoja, $rango);
         }
         catch(Exception $e)
         {
@@ -1234,16 +1252,12 @@
         // $boleta_pregunta = $code->boleta_pregunta($id_curso, $id_seccion, $id_alumno);
         $boleta_pregunta = $code->boleta_pregunta_rango($id_curso, $id_seccion, $id_alumno, $rango_inicio, $rango_fin);
         // $info_pregunta = asignar_valores($boleta_pregunta);
-        $info_pregunta =  asignar_valores_1($boleta_pregunta);
+        $info_pregunta = asignar_valores_1($boleta_pregunta);
         // var_dump($info_pregunta);
         // exit;
 
+        $info_rubrica = $code->boleta_rubrica_nuevo($id_curso, $id_seccion, $id_alumno);
 
-        $info_rubrica = NULL;
-
-        if ($id_proyecto > 0) {
-            $info_rubrica = $code->boleta_rubrica($id_curso, $id_seccion, $id_alumno, $id_proyecto);
-        }
         //var_dump($info_pregunta);
         $google = new Google();
 
