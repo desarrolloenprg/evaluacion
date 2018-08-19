@@ -518,6 +518,7 @@ class Code
             $matriz_aux = $this->cone->boleta_code_1($sesiones[$i]["ID"], $id_curso, $id_seccion, $id_alumno);
             $matriz[] = $matriz_aux;
         }
+        
         return $matriz;
     }
 
@@ -644,6 +645,7 @@ class Code
         $rango_hojas = $google->ver_rango_hojas_rubrica('1n8WU8uHO2aoS5gux1z32rq7Ryw3KoHUbWGlg2cb_jKE', 'config');
         $lista_hojas = $google->matriz('1n8WU8uHO2aoS5gux1z32rq7Ryw3KoHUbWGlg2cb_jKE', 'config!'.$rango_hojas);
         $resultado = [];
+        $resultado["SESION"] = null;
         $resultado["CALIFICACION"] = null;
         $resultado["OBJETIVO"] = null;
 
@@ -672,8 +674,11 @@ class Code
                             // echo $conversion[2]."-".$lista_datos_persona[1].", existe bitches</br>";
                             $calificacion = $conversion[$fila[5]] + $conversion[$fila[8]] + $conversion[$fila[11]] + $conversion[$fila[14]];
                             $objetivo = $conversion[$fila[6]] + $conversion[$fila[9]] + $conversion[$fila[12]] + $conversion[$fila[15]];
-                            echo "calificacion: ".$calificacion."</br>";
-                            echo "objetivo: ".$objetivo."</br>";
+                            // echo "calificacion: ".$calificacion."</br>";
+                            // echo "objetivo: ".$objetivo."</br>";
+
+                            if ($resultado["SESION"] == null) { $resultado["SESION"] = (string) $matriz[1][3]; }
+                            else { $resultado["SESION"] =  $resultado["SESION"].";".$matriz[1][3];}
 
                             if ($resultado["CALIFICACION"] == null) { $resultado["CALIFICACION"] = (string) $calificacion; }
                             else { $resultado["CALIFICACION"] =  $resultado["CALIFICACION"].";".$calificacion;}
@@ -687,6 +692,7 @@ class Code
             }
         }
         // var_dump($resultado);
+        // echo "</br>";
         // exit;
         return $resultado;
     }

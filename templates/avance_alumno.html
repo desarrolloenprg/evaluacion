@@ -135,7 +135,7 @@
                     //--------------------------------------------------------
 
                     // var inicio = {{ info_boleta.tam|json_encode() }};
-                    var inicio = parseInt("{{rango_fin}}");
+                    // var inicio = parseInt("{{rango_fin}}");
                     // var inicio = 3;
                     var labels = [];
 
@@ -144,9 +144,14 @@
                     var color_general_acum = [];
                     var border_color_general_acum = [];
 
-                    for(i=1; i <= inicio; i++)
+                    var str = '{{info_boleta.SESION }}';
+                    var list_str = str.split(';');
+                    var len_str = list_str.length;
+
+                    for(i=1; i <= len_str; i++)
                     {
-                        labels.push(i);
+                        labels.push(list_str[i-1]);
+
                         color_oblig_acum.push('rgba(166, 28, 0, 0.9)');
                         border_color_acum.push('rgba(166, 28, 0, 0.9)');
                         color_general_acum.push('rgba(255, 87, 34, 0.9)');
@@ -219,20 +224,23 @@
                 <canvas style="max-width:450px; max-height:450px; margin: 0 auto; float:none;" id="prueba1" width="200" height="200"></canvas>
                 <script>
                     //------------------------------------------------------------
-
-                    // var inicio = {{ info_video.tam|json_encode() }};
-                    var inicio = parseInt("{{rango_fin}}");
-                    // var inicio = 3;
+                    // var inicio_video = parseInt("{{rango_fin}}");
+                    // alert(inicio_video);
                     var labels_video = [];
 
                     var color_oblig_acum = [];
                     var border_color_acum = [];
                     var color_general_acum = [];
                     var border_color_general_acum = [];
+                    
+                    var str = '{{info_video.SESION }}';
+                    var list_str = str.split(';');
+                    var len_str = list_str.length;
 
-                    for(i=1; i <= inicio; i++)
+                    for(i=1; i <= len_str; i++)
                     {
-                        labels_video.push(i);
+                        labels_video.push(list_str[i-1]);
+
                         color_oblig_acum.push('rgba(166, 28, 0, 0.9)');
                         border_color_acum.push('rgba(166, 28, 0, 0.9)');
                         color_general_acum.push('rgba(255, 87, 34, 0.9)');
@@ -247,36 +255,6 @@
 
                     var info_cum_target = '{{info_video.ACUM_TARGET }}';
                     var data_acum_target = info_cum_target.split(';');
-
-                    // var grafica_video_acumulado = {
-                    //     labels: labels_video,
-                    //     datasets: [
-                    //         {
-                    //             type: 'bar',
-                    //             label: 'Obligatorio Acum',
-                    //             backgroundColor: color_oblig_acum,
-                    //             data: video_data_obligatorio_acum,
-                    //             borderColor: border_color_acum,
-                    //             borderWidth: 2
-                    //         },
-                    //         {
-                    //             type: 'bar',
-                    //             label: 'General Acum',
-                    //             backgroundColor: color_general_acum,
-                    //             data: video_data_general_acumulado,
-                    //             borderColor: border_color_general_acum,
-                    //             borderWidth: 2
-                    //         },
-                    //         {
-                    //             type: 'line',
-                    //             label: 'Acum Target',
-                    //             borderColor: 'rgba(127, 140, 141,1.0)',
-                    //             borderWidth: 2,
-                    //             fill: false,
-                    //             data: data_acum_target
-                    //         }
-                    //     ]
-                    // };
 
                     //------------------------------------------------------------
                     var ctx_1 = document.getElementById("prueba1").getContext('2d');
@@ -340,20 +318,22 @@
                 <canvas style="max-width:450px; max-height:450px; margin: 0 auto; float:none;" id="prueba2" width="200" height="200"></canvas>
                 <script>
                     //------------------------------------------------------------
-                    // var inicio = {{ info_pregunta.tam|json_encode() }};
-                    var inicio = parseInt("{{ rango_fin }}");
-
-                    // var inicio = 3;
+                    // var inicio = parseInt("{{rango_fin}}");
                     var labels_pregunta = [];
 
                     var color_oblig_acum = [];
                     var border_color_acum = [];
                     var color_general_acum = [];
                     var border_color_general_acum = [];
+                    
+                    var str = '{{info_pregunta.SESION }}';
+                    var list_str = str.split(';');
+                    var len_str = list_str.length;
 
-                    for(i=1; i <= inicio; i++)
+                    for(i=1; i <= len_str; i++)
                     {
-                        labels_pregunta.push(i);
+                        labels_pregunta.push(list_str[i-1]);
+
                         color_oblig_acum.push('rgba(166, 28, 0, 0.9)');
                         border_color_acum.push('rgba(166, 28, 0, 0.9)');
                         color_general_acum.push('rgba(255, 87, 34, 0.9)');
@@ -447,17 +427,21 @@
                 <canvas style="max-width:450px; max-height:450px; margin: 0 auto; float:none;" id="prueba3" width="200" height="200"></canvas>
                 <script>
                     // var inicio = {{ info_rubrica.tam|json_encode() }};
-                    var inicio = parseInt("5");
-
+                    
                     // var inicio = 3;
                     var labels_rubrica = [];
-
+                    
                     var color_total_rubrica = [];
                     var border_color_total_rubrica = [];
-
+                    
+                    var str = '{{info_rubrica.SESION }}';
+                    var list_str = str.split(';');
+                    var inicio = list_str.length;
+                    // var inicio = parseInt("5");
                     for(i=1; i <= inicio; i++)
                     {
-                        labels_rubrica.push(i);
+                        // labels_rubrica.push(i);
+                        labels_rubrica.push(list_str[i-1]);
                         color_oblig_acum.push('rgba(166, 28, 0, 0.9)');
                         border_color_acum.push('rgba(166, 28, 0, 0.9)');
                         color_general_acum.push('rgba(255, 87, 34, 0.9)');

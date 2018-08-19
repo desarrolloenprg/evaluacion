@@ -1231,7 +1231,7 @@
         $seccion = $code->ver_seccion($id_curso, $id_seccion)[0];
 
         $rango_inicio = 0;
-        $rango_fin = 8;
+        $rango_fin = 4;
 
         if ($this->session->exists('rango_fin')) 
         {
@@ -1243,6 +1243,8 @@
         // $boleta_code = $code->boleta_code($id_curso, $id_seccion, $id_alumno);
         $boleta_code = $code->boleta_code_rango($id_curso, $id_seccion, $id_alumno, $rango_inicio, $rango_fin);
         $info_boleta = asignar_valores_1($boleta_code);
+        // var_dump($info_boleta);
+        // exit;
 
         // $boleta_video = $code->boleta_video($id_curso, $id_seccion, $id_alumno);
         $boleta_video = $code->boleta_video_rango($id_curso, $id_seccion, $id_alumno, $rango_inicio, $rango_fin);
@@ -1255,8 +1257,31 @@
         $info_pregunta = asignar_valores_1($boleta_pregunta);
         // var_dump($info_pregunta);
         // exit;
+        
 
-        $info_rubrica = $code->boleta_rubrica_nuevo($id_curso, $id_seccion, $id_alumno);
+        $info_rubrica = NULL;
+        if ($this->session->exists('nombre_dni') && $this->session->nombre_dni == $alumno["DNI"]) 
+        {
+            $info_rubrica = [];
+            $info_rubrica["SESION"] = $this->session->datos_rubricas_sesion;
+            $info_rubrica["CALIFICACION"] = $this->session->datos_rubricas_calificacion;
+            $info_rubrica["OBJETIVO"] = $this->session->datos_rubricas_objetivo;
+            // $this->session->delete('nombre_dni');
+            // exit;
+        } else 
+        {
+            $info_rubrica = $code->boleta_rubrica_nuevo($id_curso, $id_seccion, $id_alumno);
+            $this->session->nombre_dni = $alumno["DNI"];
+            $this->session->datos_rubricas_sesion = $info_rubrica["SESION"];
+            $this->session->datos_rubricas_calificacion = $info_rubrica["CALIFICACION"];
+            $this->session->datos_rubricas_objetivo = $info_rubrica["OBJETIVO"];
+            // exit;
+        }
+        
+
+        // echo "aqui!</br>";
+        // var_dump($info_rubrica);
+        // exit;
 
         //var_dump($info_pregunta);
         $google = new Google();
@@ -1351,6 +1376,7 @@
         $data["tam"] = count($info_valores);
         $data["OBLIGATORIO_ACUM"] = null;
         $data["GENERAL_ACUMULADO"] = null;
+        $data["SESION"] = null;
 
         foreach($info_valores as $fila)
         {
@@ -1359,6 +1385,9 @@
 
             if($data["GENERAL_ACUMULADO"] == null) { $data["GENERAL_ACUMULADO"] = $fila[0]["GENERAL_ACUMULADO"];}
             else{ $data["GENERAL_ACUMULADO"] = $data["GENERAL_ACUMULADO"].';'.$fila[0]["GENERAL_ACUMULADO"]; }
+        
+            if($data["SESION"] == null) { $data["SESION"] = $fila[0]["SESION"];}
+            else{ $data["SESION"] = $data["SESION"].';'.$fila[0]["SESION"]; }
         }
 
         return $data;
