@@ -26,12 +26,15 @@ class Code
         {
             $matriz = $this->google->matriz($id_seccion, $hoja_seccion.'!'.$rango);
             // echo "prin_objetivos: ".$matriz[2][1]."</br>";
-            // echo "objetivos: ".$matriz[2][2]."</br>";
+            // echo "objetivos: ".$matriz[3][1]."</br>";
             // exit;
             $id_curso = $this->agregar_curso($matriz);
+            // echo "id_curso: ".$id_curso."</br>"; 
+            // exit;
             if ($id_curso > 0)
             {
                 $id_seccion = $this->agregar_seccion($id_curso, $matriz);
+                
                 $id_sesion = $this->agregar_sesion($id_curso, $matriz);
                 $vector = $this->ver_etapas($matriz);
                 $this->agregar_etapa($id_curso, $vector);
@@ -768,6 +771,18 @@ class Code
         }
         return $vector;
     }
+
+    public function fecha_sesiones_escuela_seccion($id_seccion, $id_curso)
+    {
+        $matriz = $this->cone->fecha_sesiones_escuela_seccion($id_seccion, $id_curso);
+        $vector = array();
+        for($i=0; $i < count($matriz); $i++)
+        {
+           $vector[$matriz[$i]['ID']] = $matriz[$i]['FECHA'];
+        }
+        return $vector;
+    }
+
 
     public function tabla_code_excel($id_sesion)
     {

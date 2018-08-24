@@ -126,7 +126,9 @@
     {
         $descarga = 0;
         $code = new Code();
-        $sesiones = $code->fecha_sesiones();
+        // $sesiones = $code->fecha_sesiones();
+        $sesiones = null;
+        $secciones = null;
         $matriz = array();
         $index = -1;
         $cantidad = 0;
@@ -136,6 +138,8 @@
         $error = -1;
         $pais_default = null;
         $escuela_default = null;
+        $index_curso = -1;
+        $index_seccion = -1;
 
         if ($this->session->exists('id_pais_default') && $this->session->exists('id_escuela_default'))
         {
@@ -145,18 +149,43 @@
             $lista_escuelas = $code->ver_escuelas($this->session->id_pais_default);
             $escuela_default = $lista_escuelas[$this->session->id_escuela_default];
             $id_escuela = $this->session->id_escuela_default;
-            $sesiones = $code->fecha_sesiones_escuela($id_escuela);
+            $cursos = $code->ver_cursos_escuela($id_escuela);
+
+
+            //************************************************ */
+            if ($this->session->exists('id_curso'))
+            {
+                $index_curso = $this->session->id_curso;
+                $secciones = $code->ver_secciones_escuela($this->session->id_curso, $id_escuela);
+
+                if ($this->session->exists('id_seccion')) 
+                {
+                    $index_seccion = $this->session->id_seccion;
+                   
+                    $sesiones = $code->fecha_sesiones_escuela_seccion($index_seccion, $index_curso);
+                    // echo "datos</br></br>";
+                    // var_dump($sesiones);
+
+                    // exit;
+                    foreach ($sesiones as $id=>$fecha) {
+
+                        $matriz_aux = $code->tabla_code($id);
+                        $matriz = $code->tabla_code_ini($id, $inicio, $fin);
+                        if (count($matriz) == 0) {
+                            unset($sesiones[$id]);
+                        }
+                    }
+                    $matriz = array();
+                    // var_dump($sesiones);
+                    // exit;
+
+                    $this->session->delete('id_seccion');
+                }
+                $this->session->delete('id_curso');
+            }
 
             //---------------------------------------------------
-            foreach ($sesiones as $id=>$fecha) {
-
-                $matriz_aux = $code->tabla_code($id);
-                $matriz = $code->tabla_code_ini($id, $inicio, $fin);
-                if (count($matriz) == 0) {
-                    unset($sesiones[$id]);
-                }
-            }
-            $matriz = array();
+            
             //---------------------------------------------------
             // var_dump($sesiones);
         }
@@ -195,7 +224,7 @@
             $error = $this->session->error;
             $this->session->delete('error');
         }
-        return $this->view->render($response, 'reporte_code.html', ['pais_default' => $pais_default, 'escuela_default' => $escuela_default, 'error'=>$error, 'pagina'=>$pagina, 'cantidad'=>$cantidad ,'descarga' => $descarga, 'index'=>$index, 'sesiones'=>$sesiones, 'matriz'=>$matriz]);
+        return $this->view->render($response, 'reporte_code.html', ['index_seccion' => $index_seccion, 'index_curso' => $index_curso, 'secciones' => $secciones, 'cursos' => $cursos, 'pais_default' => $pais_default, 'escuela_default' => $escuela_default, 'error'=>$error, 'pagina'=>$pagina, 'cantidad'=>$cantidad ,'descarga' => $descarga, 'index'=>$index, 'sesiones'=>$sesiones, 'matriz'=>$matriz]);
     })->setName('reporte_code');
 
     $app->get('/paginacion_code/{id}/{pagina}', function($request, $response, $args)
@@ -1231,7 +1260,7 @@
         $seccion = $code->ver_seccion($id_curso, $id_seccion)[0];
 
         $rango_inicio = 0;
-        $rango_fin = 4;
+        $rango_fin = 8;
 
         if ($this->session->exists('rango_fin')) 
         {
@@ -1527,7 +1556,7 @@
                         {
                             $id_alumno = $code->ver_alumno_dni($id_curso, $id_seccion, $info[2])[0];
                             // $mail = "http://www.progracademy.org/prg-test/index.php/enviar_avance/".$id_curso."/".$id_seccion."/".$id_alumno["ID"]."/0";
-                            $mail = ' <p>Estimados representantes en esta dirección <a  href="http://www.progracademy.org/prg-test/index.php/avance_alumno/'.$id_curso.'/'.$id_seccion.'/'.$id_alumno["ID"].'/0"> link </a> encontrarán el informe de progreso se su representado. </p> ';
+                            $mail = ' <p>Estimados representantes en esta dirección <a  href="http://www.progracademy.org/prg-test/index.php/avance_alumno/'.$id_curso.'/'.$id_seccion.'/'.$id_alumno["ID"].'/0"> link </a> encontrarán el informe de progreso de su representado '.$nombre.'. </p> ';
                            
                             //Titulo
                             $titulo = "Informe de Evaluación a la fecha";
@@ -1563,7 +1592,7 @@
                                 // echo $profesor[1]."</br>";
                                 // exit;
                                  //Titulo
-                                $mail = ' <p>Estimados representantes en esta dirección <a  href="http://www.progracademy.org/prg-test/index.php/avance_alumno/'.$id_curso.'/'.$id_seccion.'/'.$id.'/0"> link </a> encontrarán el informe de progreso se su representado. </p> ';
+                                $mail = ' <p>Estimados representantes en esta dirección <a  href="http://www.progracademy.org/prg-test/index.php/avance_alumno/'.$id_curso.'/'.$id_seccion.'/'.$id.'/0"> link </a> encontrarán el informe de progreso de su representado '.$nombre.'.</p> ';
                                 
                                 $titulo = "Informe de Evaluación a la fecha";
                                 //cabecera
@@ -1645,6 +1674,25 @@
         return $response->withRedirect($this->router->pathFor('generar_boletas'));
     })->setName('busqueda_curso_boleta');
 
+    $app->post('/busqueda_curso_code', function($request, $response, $args)
+    {
+        foreach($request->getParsedBody() as $key => $value)
+        {
+            if(empty($value))
+            {
+                $this->session->error = 0;
+                return $response->withRedirect($this->router->pathFor('reporte_code'));
+            }
+        }
+
+        $dato = $request->getParsedBody()['id_curso'];
+        $valores = explode("-", $dato);
+        $this->session->id_curso = $valores[1];
+
+
+        return $response->withRedirect($this->router->pathFor('reporte_code'));
+    })->setName('busqueda_curso_code');
+
     $app->post('/busqueda_seccion_boleta', function($request, $response, $args)
     {
 
@@ -1666,6 +1714,28 @@
 
         return $response->withRedirect($this->router->pathFor('generar_boletas'));
     })->setName('busqueda_seccion_boleta');
+
+    $app->post('/busqueda_seccion_code', function($request, $response, $args)
+    {
+
+        foreach($request->getParsedBody() as $key => $value)
+        {
+            if(empty($value))
+            {
+                $this->session->error = 0;
+                return $response->withRedirect($this->router->pathFor('reporte_code'));
+            }
+        }
+
+        $dato = $request->getParsedBody()['id_seccion'];
+        $valores = explode("-", $dato);
+
+        $this->session->id_seccion = $valores[1];
+        $this->session->id_curso = $valores[2];
+
+
+        return $response->withRedirect($this->router->pathFor('reporte_code'));
+    })->setName('busqueda_seccion_code');
 
     $app->post('/busqueda_alumno_boleta', function($request, $response, $args)
     {

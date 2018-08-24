@@ -98,6 +98,26 @@ class Conexion
         return $respuesta;
     }
 
+    public function existe_sesion_objetivos ($numero, $fecha, $objetivos ,$total, $curso)
+    {
+        $respuesta = -1;
+
+        $this->conectar();
+        if($this->conexion)
+        {
+            $query = "SELECT ID FROM SESION WHERE NUMERO=".$numero." AND FECHA='".$fecha."' AND OBJETIVOS=".$objetivos." AND TOTAL=".$total." AND FK_CURSO_ID=".$curso." ";
+            $resultado = mysqli_query($this->conexion, $query);
+            if($resultado) { 
+                $filas = mysqli_fetch_assoc($resultado);
+                if(count($filas) > 0) { $respuesta = (int) $filas['ID']; }
+                mysqli_free_result($resultado);
+            }
+            $this->desconectar();
+        }
+
+        return $respuesta;
+    }
+
     public function existe_etapa ($numero, $id_curso)
     {
         $respuesta = -1;
@@ -521,14 +541,15 @@ class Conexion
     {
         $lista = explode('-', $fecha);
         $fecha = $lista[2].'-'.$lista[1].'-'.$lista[0];
-        $respuesta = $this->existe_sesion($numero, $fecha);
+        $respuesta = $this->existe_sesion_objetivos($numero, $fecha, $objetivos, $total, $id_curso);
+        
         $this->conectar();
         if($this->conexion && $respuesta < 0)
         {
             $query = "INSERT INTO SESION(NUMERO, FECHA, TOTAL, OBJETIVOS, FK_CURSO_ID) VALUES(".$numero.", '".$fecha."', ".$total.", ".$objetivos.", ".$id_curso.")";
             mysqli_query($this->conexion, $query);
             $this->desconectar();
-            $respuesta = $this->existe_sesion($numero, $fecha);       
+            $respuesta = $this->existe_sesion_objetivos($numero, $fecha, $objetivos, $total, $id_curso);       
             
         }
         return $respuesta;
@@ -1211,6 +1232,30 @@ class Conexion
         if($this->conexion)
         {
             $query = "SELECT se.ID, DATE_FORMAT(se.FECHA, '%d-%m-%Y') as FECHA FROM SESION as se, ESCUELA as es, CURSO as cu WHERE se.FK_CURSO_ID=cu.ID AND cu.FK_ESCUELA_ID=es.ID AND es.ID=".$id_escuela."  ";
+            if($resultado = mysqli_query($this->conexion, $query))
+            {
+                $i = 0;
+                while ($filas = $resultado->fetch_assoc())
+                {
+                    $matriz[$i++] = $filas;
+                }
+                $resultado->free();
+            }
+            $this->desconectar();
+        }
+        return $matriz;
+    }
+
+    public function fecha_sesiones_escuela_seccion($id_seccion, $id_curso)
+    {
+        $matriz = [];
+        $this->conectar();
+        if($this->conexion)
+        {
+            // $query = "SELECT se.ID, DATE_FORMAT(se.FECHA, '%d-%m-%Y') as FECHA FROM SESION as se, ESCUELA as es, CURSO as cu, SECCION as sec WHERE se.FK_CURSO_ID=cu.ID AND cu.FK_ESCUELA_ID=es.ID AND sec.FK_CURSO_ID=cu.ID  AND es.ID=".$id_escuela." AND sec.ID=".$id_seccion." AND cu.ID=".$id_curso." ";
+            
+            $query = "SELECT DISTINCT se.ID, DATE_FORMAT(se.FECHA, '%d-%m-%Y') as FECHA FROM SESION as se, CURSO as cu, SECCION as sec, ALUMNO as al, AVANCE_CODE as av WHERE al.FK_SECCION_ID=sec.ID AND av.FK_ALUMNO_ID=al.ID AND av.FK_SESION_ID=se.ID AND se.FK_CURSO_ID=sec.FK_CURSO_ID AND cu.ID=".$id_curso."  AND sec.ID=".$id_seccion." ";
+            
             if($resultado = mysqli_query($this->conexion, $query))
             {
                 $i = 0;
