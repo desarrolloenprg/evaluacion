@@ -640,7 +640,7 @@
     {
         $descarga = 0;
         $code = new Code();
-        $sesiones = $code->fecha_sesiones();
+        $sesiones =null;
         $matriz = array();
         $index = -1;
         $cantidad = 0;
@@ -650,7 +650,9 @@
         $error = -1;
         $pais_default = null;
         $escuela_default = null;
-
+        $index_curso = -1;
+        $index_seccion = -1;
+        $secciones = null;
 
         if ($this->session->exists('id_pais_default') && $this->session->exists('id_escuela_default'))
         {
@@ -660,21 +662,40 @@
             $lista_escuelas = $code->ver_escuelas($this->session->id_pais_default);
             $escuela_default = $lista_escuelas[$this->session->id_escuela_default];
             $id_escuela = $this->session->id_escuela_default;
-            $sesiones = $code->fecha_sesiones_escuela($id_escuela);
+            // $sesiones = $code->fecha_sesiones_escuela($id_escuela);
+            $cursos = $code->ver_cursos_escuela($id_escuela);
 
-            //---------------------------------------------------
-            foreach ($sesiones as $id=>$fecha) {
+            if ($this->session->exists('id_curso'))
+            {
+                $index_curso = $this->session->id_curso;
+                $secciones = $code->ver_secciones_escuela($this->session->id_curso, $id_escuela);
 
-                $matriz_aux = $code->tabla_video($id);
-                $matriz = $code->tabla_video_ini($id, $inicio, $fin);
-                if (count($matriz) == 0) {
-                    unset($sesiones[$id]);
+                if ($this->session->exists('id_seccion')) 
+                {
+                    $index_seccion = $this->session->id_seccion;
+                   
+                    $sesiones = $code->fecha_sesiones_escuela_video($index_seccion, $index_curso);
+                    // echo "datos</br></br>";
+                    // var_dump($sesiones);
+
+                    // exit;
+                    foreach ($sesiones as $id=>$fecha) {
+
+                        $matriz_aux = $code->tabla_video($id);
+                        $matriz = $code->tabla_video_ini($id, $inicio, $fin);
+                        if (count($matriz) == 0) {
+                            unset($sesiones[$id]);
+                        }
+                    }
+                    $matriz = array();
+                    // var_dump($sesiones);
+                    // exit;
+
+                    $this->session->delete('id_seccion');
                 }
+                $this->session->delete('id_curso');
             }
-            $matriz = array();
-            //---------------------------------------------------
         }
-
 
         if($this->session->exists('id_sesion'))
         {
@@ -711,14 +732,14 @@
         }
 
         // return $this->view->render($response, 'reporte_edpuzzle_videos.html', ['pagina'=>$pagina, 'cantidad'=>$cantidad ,'descarga' => $descarga, 'index'=>$index, 'sesiones'=>$sesiones, 'matriz'=>$matriz]);
-        return $this->view->render($response, 'reporte_edpuzzle_videos.html', ['pais_default' => $pais_default, 'escuela_default' => $escuela_default,'error'=>$error, 'pagina'=>$pagina, 'cantidad'=>$cantidad ,'descarga' => $descarga, 'index'=>$index, 'sesiones'=>$sesiones, 'matriz'=>$matriz]);
+        return $this->view->render($response, 'reporte_edpuzzle_videos.html', ['secciones' => $secciones, 'cursos' => $cursos, 'index_seccion' => $index_seccion, 'index_curso' => $index_curso, 'pais_default' => $pais_default, 'escuela_default' => $escuela_default,'error'=>$error, 'pagina'=>$pagina, 'cantidad'=>$cantidad ,'descarga' => $descarga, 'index'=>$index, 'sesiones'=>$sesiones, 'matriz'=>$matriz]);
     })->setName('reporte_edpuzzle_videos');
 
     $app->get('/reporte_edpuzzle_pregunta', function($request, $response, $args)
     {
         $descarga = 0;
         $code = new Code();
-        $sesiones = $code->fecha_sesiones();
+        $sesiones = null;
         $matriz = array();
         $index = -1;
         $cantidad = 0;
@@ -728,6 +749,9 @@
         $error = -1;
         $pais_default = null;
         $escuela_default = null;
+        $index_curso = -1;
+        $index_seccion = -1;
+        $secciones = null;
 
 
         if ($this->session->exists('id_pais_default') && $this->session->exists('id_escuela_default'))
@@ -738,19 +762,39 @@
             $lista_escuelas = $code->ver_escuelas($this->session->id_pais_default);
             $escuela_default = $lista_escuelas[$this->session->id_escuela_default];
             $id_escuela = $this->session->id_escuela_default;
-            $sesiones = $code->fecha_sesiones_escuela($id_escuela);
+            // $sesiones = $code->fecha_sesiones_escuela($id_escuela);
 
-            //---------------------------------------------------
-            foreach ($sesiones as $id=>$fecha) {
+            $cursos = $code->ver_cursos_escuela($id_escuela);
 
-                $matriz_aux = $code->tabla_pregunta($id);
-                $matriz = $code->tabla_pregunta_ini($id, $inicio, $fin);
-                if (count($matriz) == 0) {
-                    unset($sesiones[$id]);
+            if ($this->session->exists('id_curso'))
+            {
+                $index_curso = $this->session->id_curso;
+                $secciones = $code->ver_secciones_escuela($this->session->id_curso, $id_escuela);
+
+                if ($this->session->exists('id_seccion')) 
+                {
+                    $index_seccion = $this->session->id_seccion;
+                   
+                    $sesiones = $code->fecha_sesiones_escuela_pregunta($index_seccion, $index_curso);
+                   
+                    //---------------------------------------------------
+                    foreach ($sesiones as $id=>$fecha) {
+
+                        $matriz_aux = $code->tabla_pregunta($id);
+                        $matriz = $code->tabla_pregunta_ini($id, $inicio, $fin);
+                        if (count($matriz) == 0) {
+                            unset($sesiones[$id]);
+                        }
+                    }
+                    $matriz = array();
+                    //---------------------------------------------------
+                    // var_dump($sesiones);
+                    // exit;
+
+                    $this->session->delete('id_seccion');
                 }
+                $this->session->delete('id_curso');
             }
-            $matriz = array();
-            //---------------------------------------------------
         }
 
         if($this->session->exists('id_sesion'))
@@ -788,7 +832,7 @@
             $this->session->delete('error');
         }
 
-        return $this->view->render($response, 'reporte_edpuzzle_preguntas.html', ['pais_default' => $pais_default, 'escuela_default' => $escuela_default, 'error'=>$error, 'pagina'=>$pagina, 'cantidad'=>$cantidad ,'descarga' => $descarga, 'index'=>$index, 'sesiones'=>$sesiones, 'matriz'=>$matriz]);
+        return $this->view->render($response, 'reporte_edpuzzle_preguntas.html', ['secciones' => $secciones, 'cursos' => $cursos, 'index_seccion' => $index_seccion, 'index_curso' => $index_curso, 'pais_default' => $pais_default, 'escuela_default' => $escuela_default, 'error'=>$error, 'pagina'=>$pagina, 'cantidad'=>$cantidad ,'descarga' => $descarga, 'index'=>$index, 'sesiones'=>$sesiones, 'matriz'=>$matriz]);
     })->setName('reporte_edpuzzle_pregunta');
 
     $app->get('/reporte_proyectos', function($request, $response, $args)
@@ -1121,7 +1165,7 @@
             if($this->session->exists("id_curso"))
             {
                 $index_curso = $this->session->id_curso;
-                $secciones = $code->ver_secciones_escuela($this->session->id_curso, $id_escuela);
+                $secciones = $code->ver_secciones_escuela_code($this->session->id_curso, $id_escuela);
                 // $alumnos = $code->ver_alumnos($this->session->id_seccion);
 
                 if($this->session->exists('id_seccion'))
@@ -1693,6 +1737,44 @@
         return $response->withRedirect($this->router->pathFor('reporte_code'));
     })->setName('busqueda_curso_code');
 
+    $app->post('/busqueda_curso_video', function($request, $response, $args)
+    {
+        foreach($request->getParsedBody() as $key => $value)
+        {
+            if(empty($value))
+            {
+                $this->session->error = 0;
+                return $response->withRedirect($this->router->pathFor('reporte_edpuzzle_videos'));
+            }
+        }
+
+        $dato = $request->getParsedBody()['id_curso'];
+        $valores = explode("-", $dato);
+        $this->session->id_curso = $valores[1];
+
+
+        return $response->withRedirect($this->router->pathFor('reporte_edpuzzle_videos'));
+    })->setName('busqueda_curso_video');
+
+    $app->post('/busqueda_curso_pregunta', function($request, $response, $args)
+    {
+        foreach($request->getParsedBody() as $key => $value)
+        {
+            if(empty($value))
+            {
+                $this->session->error = 0;
+                return $response->withRedirect($this->router->pathFor('reporte_edpuzzle_pregunta'));
+            }
+        }
+
+        $dato = $request->getParsedBody()['id_curso'];
+        $valores = explode("-", $dato);
+        $this->session->id_curso = $valores[1];
+
+
+        return $response->withRedirect($this->router->pathFor('reporte_edpuzzle_pregunta'));
+    })->setName('busqueda_curso_pregunta');
+
     $app->post('/busqueda_seccion_boleta', function($request, $response, $args)
     {
 
@@ -1736,6 +1818,50 @@
 
         return $response->withRedirect($this->router->pathFor('reporte_code'));
     })->setName('busqueda_seccion_code');
+
+    $app->post('/busqueda_seccion_video', function($request, $response, $args)
+    {
+
+        foreach($request->getParsedBody() as $key => $value)
+        {
+            if(empty($value))
+            {
+                $this->session->error = 0;
+                return $response->withRedirect($this->router->pathFor('reporte_edpuzzle_videos'));
+            }
+        }
+
+        $dato = $request->getParsedBody()['id_seccion'];
+        $valores = explode("-", $dato);
+
+        $this->session->id_seccion = $valores[1];
+        $this->session->id_curso = $valores[2];
+
+
+        return $response->withRedirect($this->router->pathFor('reporte_edpuzzle_videos'));
+    })->setName('busqueda_seccion_video');
+
+    $app->post('/busqueda_seccion_pregunta', function($request, $response, $args)
+    {
+
+        foreach($request->getParsedBody() as $key => $value)
+        {
+            if(empty($value))
+            {
+                $this->session->error = 0;
+                return $response->withRedirect($this->router->pathFor('reporte_edpuzzle_pregunta'));
+            }
+        }
+
+        $dato = $request->getParsedBody()['id_seccion'];
+        $valores = explode("-", $dato);
+
+        $this->session->id_seccion = $valores[1];
+        $this->session->id_curso = $valores[2];
+
+
+        return $response->withRedirect($this->router->pathFor('reporte_edpuzzle_pregunta'));
+    })->setName('busqueda_seccion_pregunta');
 
     $app->post('/busqueda_alumno_boleta', function($request, $response, $args)
     {

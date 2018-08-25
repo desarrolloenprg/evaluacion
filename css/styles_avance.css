@@ -119,8 +119,9 @@ body
 }
 
 .leyenda-orange {
+    margin-top: 10px;
     width: 25px;
-    height: 25px;
+    height: 5px;
     background-color: #ff5722;
 }
 

@@ -1270,6 +1270,54 @@ class Conexion
         return $matriz;
     }
 
+    public function fecha_sesiones_escuela_video($id_seccion, $id_curso)
+    {
+        $matriz = [];
+        $this->conectar();
+        if($this->conexion)
+        {
+            // $query = "SELECT se.ID, DATE_FORMAT(se.FECHA, '%d-%m-%Y') as FECHA FROM SESION as se, ESCUELA as es, CURSO as cu, SECCION as sec WHERE se.FK_CURSO_ID=cu.ID AND cu.FK_ESCUELA_ID=es.ID AND sec.FK_CURSO_ID=cu.ID  AND es.ID=".$id_escuela." AND sec.ID=".$id_seccion." AND cu.ID=".$id_curso." ";
+            
+            $query = "SELECT DISTINCT se.ID, DATE_FORMAT(se.FECHA, '%d-%m-%Y') as FECHA FROM SESION as se, CURSO as cu, SECCION as sec, ALUMNO as al, AVANCE_VIDEO as av, OBJETIVO_VIDEO as obj, VIDEO as vid WHERE al.FK_SECCION_ID=sec.ID AND av.FK_ALUMNO_ID=al.ID AND se.FK_CURSO_ID=sec.FK_CURSO_ID AND obj.FK_SESION_ID=se.ID AND vid.ID=obj.FK_VIDEO_ID AND av.FK_VIDEO_ID=vid.ID AND cu.ID=".$id_curso."  AND sec.ID=".$id_seccion." ";
+            
+            if($resultado = mysqli_query($this->conexion, $query))
+            {
+                $i = 0;
+                while ($filas = $resultado->fetch_assoc())
+                {
+                    $matriz[$i++] = $filas;
+                }
+                $resultado->free();
+            }
+            $this->desconectar();
+        }
+        return $matriz;
+    }
+
+    public function fecha_sesiones_escuela_pregunta($id_seccion, $id_curso)
+    {
+        $matriz = [];
+        $this->conectar();
+        if($this->conexion)
+        {
+            // $query = "SELECT se.ID, DATE_FORMAT(se.FECHA, '%d-%m-%Y') as FECHA FROM SESION as se, ESCUELA as es, CURSO as cu, SECCION as sec WHERE se.FK_CURSO_ID=cu.ID AND cu.FK_ESCUELA_ID=es.ID AND sec.FK_CURSO_ID=cu.ID  AND es.ID=".$id_escuela." AND sec.ID=".$id_seccion." AND cu.ID=".$id_curso." ";
+            
+            $query = "SELECT DISTINCT se.ID, DATE_FORMAT(se.FECHA, '%d-%m-%Y') as FECHA FROM SESION as se, CURSO as cu, SECCION as sec, ALUMNO as al, AVANCE_PREGUNTA as av, PREGUNTA as pre WHERE al.FK_SECCION_ID=sec.ID AND av.FK_ALUMNO_ID=al.ID AND al.FK_SECCION_ID=sec.ID AND se.FK_CURSO_ID=sec.FK_CURSO_ID AND pre.FK_SESION_ID=se.ID AND av.FK_PREGUNTA_ID=pre.ID AND cu.ID=".$id_curso."  AND sec.ID=".$id_seccion." ";
+            
+            if($resultado = mysqli_query($this->conexion, $query))
+            {
+                $i = 0;
+                while ($filas = $resultado->fetch_assoc())
+                {
+                    $matriz[$i++] = $filas;
+                }
+                $resultado->free();
+            }
+            $this->desconectar();
+        }
+        return $matriz;
+    }
+
     public function fechas_avance_code($id_sesion)
     {
         $matriz = [];

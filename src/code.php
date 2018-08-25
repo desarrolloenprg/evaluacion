@@ -783,6 +783,27 @@ class Code
         return $vector;
     }
 
+    public function fecha_sesiones_escuela_video($id_seccion, $id_curso)
+    {
+        $matriz = $this->cone->fecha_sesiones_escuela_video($id_seccion, $id_curso);
+        $vector = array();
+        for($i=0; $i < count($matriz); $i++)
+        {
+           $vector[$matriz[$i]['ID']] = $matriz[$i]['FECHA'];
+        }
+        return $vector;
+    }
+
+    public function fecha_sesiones_escuela_pregunta($id_seccion, $id_curso)
+    {
+        $matriz = $this->cone->fecha_sesiones_escuela_pregunta($id_seccion, $id_curso);
+        $vector = array();
+        for($i=0; $i < count($matriz); $i++)
+        {
+           $vector[$matriz[$i]['ID']] = $matriz[$i]['FECHA'];
+        }
+        return $vector;
+    }
 
     public function tabla_code_excel($id_sesion)
     {
@@ -859,6 +880,17 @@ class Code
     }
 
     public function ver_secciones_escuela($id_curso, $id_escuela)
+    {
+        $matriz = $this->cone->ver_secciones_escuela($id_curso, $id_escuela);
+        $vector = array();
+        for($i=0; $i < count($matriz); $i++)
+        {
+           $vector[$matriz[$i]['ID']] = $matriz[$i]['NOMBRE'];
+        }
+        return $vector;
+    }
+
+    public function ver_secciones_escuela_code($id_curso, $id_escuela)
     {
         $matriz = $this->cone->ver_secciones_escuela($id_curso, $id_escuela);
         $vector = array();

@@ -57,23 +57,23 @@
             </form>
         </div>
         <div class="col-sm-6">
-                <form action="{{ path_for('busqueda_seccion_code') }}" method="post" id="form-secciones">
-                    <div class="form-group">
-                        <label for="sesion">Seleccione una seccion</label>
-                        <select class="form-control" id="secciones" class="secciones" name="secciones" {% if secciones is null %} disabled {% endif %}>
-                                <option value="-1" id="-1">Seleccione una opción</option>
-                                {% for clave, valor  in secciones %}
-                                    {% if clave == index_seccion %}
-                                        <option value="{{clave}}" name="{{clave}}" id="opt-{{clave}}" class="opcion-seccion" selected>{{ valor }}</option>
-                                    {% else %}
-                                        <option value="{{clave}}" name="{{clave}}" id="opt-{{clave}}" class="opcion-seccion">{{ valor }}</option>
-                                    {% endif %}
-                                {% endfor %}
-                        </select>
-                    </div>
-                    <input type="text" name="id_seccion" id="id_seccion" value="" hidden>
-                </form>
-            </div>
+            <form action="{{ path_for('busqueda_seccion_code') }}" method="post" id="form-secciones">
+                <div class="form-group">
+                    <label for="sesion">Seleccione una seccion</label>
+                    <select class="form-control" id="secciones" class="secciones" name="secciones" {% if secciones is null %} disabled {% endif %}>
+                            <option value="-1" id="-1">Seleccione una opción</option>
+                            {% for clave, valor  in secciones %}
+                                {% if clave == index_seccion %}
+                                    <option value="{{clave}}" name="{{clave}}" id="opt-{{clave}}" class="opcion-seccion" selected>{{ valor }}</option>
+                                {% else %}
+                                    <option value="{{clave}}" name="{{clave}}" id="opt-{{clave}}" class="opcion-seccion">{{ valor }}</option>
+                                {% endif %}
+                            {% endfor %}
+                    </select>
+                </div>
+                <input type="text" name="id_seccion" id="id_seccion" value="" hidden>
+            </form>
+        </div>
     </div>
 
 

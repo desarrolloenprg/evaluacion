@@ -38,11 +38,50 @@
     </div>
     {% endif %}
     <div class="row">
+        <div class="col-sm-6">
+            <form action="{{ path_for('busqueda_curso_pregunta') }}" method="post" id="form-cursos">
+                <div class="form-group">
+                    <label for="cursos">Seleccione un curso</label>
+                    <select class="form-control" id="cursos" class="cursos" name="cursos" {% if pais_default is null and escuela_default is null %} disabled {% endif %}>
+                            <option value="-1" id="-1">Seleccione una opción</option>
+                            {% for clave, valor  in cursos %}
+                                {% if clave == index_curso %}
+                                    <option value="{{clave}}" name="{{clave}}" id="opt-{{clave}}" class="opcion-curso" selected>{{ valor }}</option>
+                                {% else %}
+                                    <option value="{{clave}}" name="{{clave}}" id="opt-{{clave}}" class="opcion-curso">{{ valor }}</option>
+                                {% endif %}
+                            {% endfor %}
+                    </select>
+                </div>
+                <input type="text" name="id_curso" id="id_curso" value="" hidden>
+            </form>
+        </div>
+        <div class="col-sm-6">
+            <form action="{{ path_for('busqueda_seccion_pregunta') }}" method="post" id="form-secciones">
+                <div class="form-group">
+                    <label for="sesion">Seleccione una seccion</label>
+                    <select class="form-control" id="secciones" class="secciones" name="secciones" {% if secciones is null %} disabled {% endif %}>
+                            <option value="-1" id="-1">Seleccione una opción</option>
+                            {% for clave, valor  in secciones %}
+                                {% if clave == index_seccion %}
+                                    <option value="{{clave}}" name="{{clave}}" id="opt-{{clave}}" class="opcion-seccion" selected>{{ valor }}</option>
+                                {% else %}
+                                    <option value="{{clave}}" name="{{clave}}" id="opt-{{clave}}" class="opcion-seccion">{{ valor }}</option>
+                                {% endif %}
+                            {% endfor %}
+                    </select>
+                </div>
+                <input type="text" name="id_seccion" id="id_seccion" value="" hidden>
+            </form>
+        </div>
+    </div>
+
+    <div class="row">
         <div class="col-sm-12">
             <form action="{{ path_for('busqueda_sesiones_pregunta') }}" method="post" id="form-sesiones">
                 <div class="form-group">
                     <label for="sesion">Seleccione la fecha de la sesión</label>
-                    <select class="form-control" id="sesiones" class="sesiones" name="sesiones" {% if pais_default is null %} disabled {% endif %}>
+                    <select class="form-control" id="sesiones" class="sesiones" name="sesiones" {% if sesiones is null %} disabled {% endif %}>
                           <option value="-1" id="-1">Seleccione una opción</option>
                           {% for clave, valor  in sesiones %}
                             {% if clave == index %}
@@ -160,15 +199,26 @@
 </div>
 
 <script>
-    // solo firefox
-    // $('.opcion').click(function()
-    // {
-    //     if($(this).attr('id') != -1)
-    //     {
-    //         $('#id_sesion').val($(this).attr('id'));
-    //         $('#form-sesiones').submit();
-    //     }
-    // });
+     $('#cursos').change(function() 
+    {
+        if($(this).val() != -1)
+        {
+            $('#id_curso').val('opt-'+$(this).val());
+            // alert('val: '+$('#id_curso').val());
+            $('#form-cursos').submit();
+        }  
+    });
+
+    $('#secciones').change(function() 
+    {
+        if($(this).attr('id') != -1)
+        {
+            $('#id_seccion').val('opt-'+$(this).val()+'-{{index_curso}}');
+            // alert($('#id_seccion').val());
+            $('#form-secciones').submit();
+        }
+    });
+
     // chrome
     $('#sesiones').change(function() {
         if($(this).val() != -1)
