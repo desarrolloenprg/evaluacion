@@ -1,0 +1,9 @@
+--0) Falta al dar Sesión siguiente que se oculte la primera sesión
+
+--1) En comentarios individuales (poyo&Comentarios) toma siempre una sección. Si mando el informe a padres de distintas secciones solo se va a ver los comentarios de la sección que esté en https://docs.google.com/spreadsheets/d/1MBTFsJFbBhorkUGGPNE4Bsze4YdvzB0rFMprb1mhXLk/edit#gid=0
+    
+--2) Las rúbricas de sección C no las está cargando a pesar de que el archivo NUEVO Rúbricas si tiene la data https://docs.google.com/spreadsheets/d/1n8WU8uHO2aoS5gux1z32rq7Ryw3KoHUbWGlg2cb_jKE/edit#gid=1488413808
+    
+--3) Al enviar el avance, en CHrome se queda congelada la pantalla, acepta solo que elija el curso y no hace mas nada. En firefox si dice que envió pero no ha llegado. Supongo que se demora.
+    
+--4) No tienes todavía la hoja de los proyectos?

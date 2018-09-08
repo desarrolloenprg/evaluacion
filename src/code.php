@@ -95,7 +95,8 @@ class Code
         return $vector;
     }
 
-    public function ver_comentario_individual ($seccion, $nombre_alumno, $id_seccion, $hoja_seccion, $rango)
+    //
+    public function ver_comentario_individual ($seccion, $dni_alumno, $id_seccion, $hoja_seccion, $rango)
     {
         $this->google = new Google();
         $matriz = $this->google->matriz($id_seccion, $hoja_seccion.'!'.$rango);
@@ -105,7 +106,8 @@ class Code
         {
             for ($i = 0; $i < count($matriz[3]); $i++)
             {
-                if (strcmp($matriz[3][$i], $nombre_alumno) == 0)
+                $valores = explode('-', $matriz[3][$i]);
+                if (strcmp($valores[0], $dni_alumno) == 0)
                 {
                         $index = $i;
                 }

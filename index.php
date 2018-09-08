@@ -1228,16 +1228,9 @@
         $rango_inicio = (int) $valores[3];
         $rango_fin = (int) $valores[4];
 
-        // $rango_inicio += 1;
         $rango_fin += 1;
-        // echo "inicio: ".$rango_inicio."</br>";
-        // echo "fin: ".$rango_fin."</br>";
-        // exit;
-        // $this->session->rango_inicio = $rango_inicio;
         $this->session->rango_fin = $rango_fin;
-
         return $response->withRedirect('avance_alumno/'.$id_curso.'/'.$id_seccion.'/'.$id_alumno.'/0');
-
     })->setName('siguiente_avance');
 
     $app->post('/anterior_avance', function($request, $response, $args) 
@@ -1260,17 +1253,11 @@
         $rango_inicio = (int) $valores[3];
         $rango_fin = (int) $valores[4];
 
-        if ($rango_fin > 4) 
-        {
-            // $rango_inicio -= 1;
+        if ($rango_fin > 0) 
             $rango_fin -= 1;
-        }
+        else
+            $rango_fin = 0;
 
-        // echo "inicio: ".$rango_inicio."</br>";
-        // echo "fin: ".$rango_fin."</br>";
-        // exit;
-        
-        // $this->session->rango_inicio = $rango_inicio;
         $this->session->rango_fin = $rango_fin;
         
         return $response->withRedirect('avance_alumno/'.$id_curso.'/'.$id_seccion.'/'.$id_alumno.'/0');
@@ -1303,29 +1290,29 @@
         $alumno = $code->ver_alumno($id_curso, $id_seccion, $id_alumno)[0];
         $seccion = $code->ver_seccion($id_curso, $id_seccion)[0];
 
-        $rango_inicio = 0;
-        $rango_fin = 8;
+        $rango_inicio = 5;
+        $rango_fin = 0;
 
         if ($this->session->exists('rango_fin')) 
         {
-            $rango_fin = $this->session->rango_fin;
+            $rango_fin = (int) $this->session->rango_fin;
             
             $this->session->delete('rango_fin');
         }
 
         // $boleta_code = $code->boleta_code($id_curso, $id_seccion, $id_alumno);
-        $boleta_code = $code->boleta_code_rango($id_curso, $id_seccion, $id_alumno, $rango_inicio, $rango_fin);
+        $boleta_code = $code->boleta_code_rango($id_curso, $id_seccion, $id_alumno, $rango_fin, $rango_inicio);
         $info_boleta = asignar_valores_1($boleta_code);
         // var_dump($info_boleta);
         // exit;
 
         // $boleta_video = $code->boleta_video($id_curso, $id_seccion, $id_alumno);
-        $boleta_video = $code->boleta_video_rango($id_curso, $id_seccion, $id_alumno, $rango_inicio, $rango_fin);
+        $boleta_video = $code->boleta_video_rango($id_curso, $id_seccion, $id_alumno, $rango_fin, $rango_inicio);
         $info_video = asignar_valores_1($boleta_video);
         //var_dump($info_video);
         
         // $boleta_pregunta = $code->boleta_pregunta($id_curso, $id_seccion, $id_alumno);
-        $boleta_pregunta = $code->boleta_pregunta_rango($id_curso, $id_seccion, $id_alumno, $rango_inicio, $rango_fin);
+        $boleta_pregunta = $code->boleta_pregunta_rango($id_curso, $id_seccion, $id_alumno, $rango_fin, $rango_inicio);
         // $info_pregunta = asignar_valores($boleta_pregunta);
         $info_pregunta = asignar_valores_1($boleta_pregunta);
         // var_dump($info_pregunta);
@@ -1348,20 +1335,12 @@
             $this->session->datos_rubricas_sesion = $info_rubrica["SESION"];
             $this->session->datos_rubricas_calificacion = $info_rubrica["CALIFICACION"];
             $this->session->datos_rubricas_objetivo = $info_rubrica["OBJETIVO"];
-            // exit;
         }
         
-
-        // echo "aqui!</br>";
-        // var_dump($info_rubrica);
-        // exit;
-
-        //var_dump($info_pregunta);
         $google = new Google();
-
-        $rango = $google->cargar_code('1MBTFsJFbBhorkUGGPNE4Bsze4YdvzB0rFMprb1mhXLk', 'info')[0];
+        $rango = $google->cargar_code('1MBTFsJFbBhorkUGGPNE4Bsze4YdvzB0rFMprb1mhXLk', $seccion["NOMBRE"])[0];
         $code = new Code();
-        $info = $code->ver_comentario_individual($seccion, $alumno['NOMBRE'], '1MBTFsJFbBhorkUGGPNE4Bsze4YdvzB0rFMprb1mhXLk', 'info', $rango);
+        $info = $code->ver_comentario_individual($seccion, $alumno['DNI'], '1MBTFsJFbBhorkUGGPNE4Bsze4YdvzB0rFMprb1mhXLk', $seccion["NOMBRE"], $rango);
 
         $comentario = $info['COMENTARIO'];
         $apoyo = $info['APOYO'];
@@ -1380,9 +1359,11 @@
         $rango = $google->cargar_code('1BNBdMHe6r78-3oIR7wqzrF4st5nXPTZD8Xbfo8XUZ3Q', $nombre_seccion)[0];
         $info_proyectos = $code->ver_info_proyectos('1BNBdMHe6r78-3oIR7wqzrF4st5nXPTZD8Xbfo8XUZ3Q', $nombre_seccion, $rango);
         $cont = 0;
+
         for ($i = 0; $i < count($info_proyectos[3]); $i++)
         {   
-            if ($info_proyectos[3][$i] == $alumno['NOMBRE'])
+            $valores = explode("-", $info_proyectos[3][$i]);
+            if ($valores[0] == $alumno['DNI'])
             {
                 $cont = $i;
                 break;
@@ -1600,7 +1581,7 @@
                         {
                             $id_alumno = $code->ver_alumno_dni($id_curso, $id_seccion, $info[2])[0];
                             // $mail = "http://www.progracademy.org/prg-test/index.php/enviar_avance/".$id_curso."/".$id_seccion."/".$id_alumno["ID"]."/0";
-                            $mail = ' <p>Estimados representantes en esta dirección <a  href="http://www.progracademy.org/prg-test/index.php/avance_alumno/'.$id_curso.'/'.$id_seccion.'/'.$id_alumno["ID"].'/0"> link </a> encontrarán el informe de progreso de su representado '.$nombre.'. </p> ';
+                            $mail = ' <p>Estimados representantes en esta dirección <a  href="http://www.progracademy.org/prg-test/index.php/avance_alumno/'.$id_curso.'/'.$id_seccion.'/'.$id_alumno["ID"].'/0"> link </a> encontrarán el informe de progreso de su representado '.$id_alumno["NOMBRE"].'. </p> ';
                            
                             //Titulo
                             $titulo = "Informe de Evaluación a la fecha";

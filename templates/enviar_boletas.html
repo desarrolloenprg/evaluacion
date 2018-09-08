@@ -79,7 +79,7 @@
         <div class="col-sm-12">
             <hr>
             <form action="{{ path_for('busqueda_tipo_envio') }}" method="POST">
-                <button class="btn btn-primary pull-right" id="btn_envio">Enviar Avance</button>
+                <button class="btn btn-primary pull-right" id="btn_envio" disabled>Enviar Avance</button>
                 <input type="text" name="id_info_envio" id="id_info_envio" value="" hidden>
             </form>
         </div>
@@ -87,39 +87,33 @@
 </div>
 
 <script>
-    $('.opcion-curso').click(function()
+
+    $('#cursos').change(function() 
     {
-        if($(this).attr('id') != '-1')
+        if($(this).val() != -1)
         {
-            $('#id_curso').val($(this).attr('id'));
+            $('#id_curso').val('opt-'+$(this).val());
             $('#form-cursos').submit();
-        }
-        else 
-        {
-            $('#btn_envio').prop('disabled', true);
-        }
+        }  
     });
 
-    $('.opcion-seccion').click(function()
+    $('#secciones').change(function() 
     {
-        if($(this).attr('id') != '-1')
+        if($(this).attr('id') != -1)
         {
-            $('#id_seccion').val($(this).attr('id')+'-{{ index_curso }}');
+            $('#id_seccion').val('opt-'+$(this).val()+'-{{index_curso}}');
             $('#form-secciones').submit();
-        }
-        else 
-        {
-            $('#btn_envio').prop('disabled', true);
         }
     });
 
     $('#btn_envio').prop('disabled', true);
-    $('.opcion-tipo').click(function()
+    $('#tipos').change(function()
     {
         if ($(this).attr('id') != '-1')
         {
             $('#btn_envio').prop('disabled', false);
-            $('#id_info_envio').val($(this).attr('id')+'-'+'{{ index_curso }}'+'-'+'{{ index_seccion }}');
+            // alert($(this).val()+'-'+'{{ index_curso }}'+'-'+'{{ index_seccion }}')
+            $('#id_info_envio').val($(this).val()+'-'+'{{ index_curso }}'+'-'+'{{ index_seccion }}');
         }
         else 
         {
