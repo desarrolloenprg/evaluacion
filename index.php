@@ -1346,8 +1346,8 @@
         $apoyo = $info['APOYO'];
 
         //----------------------------------------------
-        $rango = $google->cargar_code('1G3UcF65IVareKQ4gu6utfgBjWLTN0HK5_FqrnXG0uVw', 'noticias')[0];
-        $noticias = $code->ver_noticias('1G3UcF65IVareKQ4gu6utfgBjWLTN0HK5_FqrnXG0uVw', 'noticias', $rango);
+        $rango = $google->cargar_code('15tqrhRwaNOtfrpOh3oTf12o8cvnm-o0rWVcqkYsr5ug', 'noticias')[0];
+        $noticias = $code->ver_noticias('15tqrhRwaNOtfrpOh3oTf12o8cvnm-o0rWVcqkYsr5ug', 'noticias', $rango);
         $noti = array();
         for ($i=0; $i < count($noticias); $i++)
         {
