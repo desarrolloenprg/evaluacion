@@ -1570,30 +1570,31 @@
                     $google = new Google();
                     $id_curso = $this->session->id_curso;
                     $id_seccion = $this->session->id_seccion;
-                    // Envio del correo a la los representates 
+                    // Envio del correo a los representates 
                     if ($this->session->tipo_envio == 2)
                     {
+						
                         $nombre_seccion = $code->ver_seccion($this->session->id_curso, $this->session->id_seccion)[0]["NOMBRE"]; 
-                        $rango = $google->ver_rango('1bYt8vk_4IGnPExUCtfULvymKULnbhdvZRSh44W7PlIs', $nombre_seccion);
-                        $representates = $code->ver_representantes('1bYt8vk_4IGnPExUCtfULvymKULnbhdvZRSh44W7PlIs', $nombre_seccion, $rango);
+                        $rango = $google->ver_rango('189Cbwb4NpEJu-HMqwKGbpVnTgWuDaT_94adM6kr46VU', $nombre_seccion);
+                        $representates = $code->ver_representantes('189Cbwb4NpEJu-HMqwKGbpVnTgWuDaT_94adM6kr46VU', $nombre_seccion, $rango);
                         
-                        foreach ($representates as $info)
+						foreach ($representates as $info)
                         {
-                            $id_alumno = $code->ver_alumno_dni($id_curso, $id_seccion, $info[2])[0];
+							$id_alumno = $code->ver_alumno_dni($id_curso, $id_seccion, $info[2])[0];
                             // $mail = "http://www.progracademy.org/prg-test/index.php/enviar_avance/".$id_curso."/".$id_seccion."/".$id_alumno["ID"]."/0";
-                            $mail = ' <p>Estimados representantes en esta dirección <a  href="http://www.progracademy.org/prg-test/index.php/avance_alumno/'.$id_curso.'/'.$id_seccion.'/'.$id_alumno["ID"].'/0"> link </a> encontrarán el informe de progreso de su representado '.$id_alumno["NOMBRE"].'. </p> ';
-                           
+                            $mail = ' <p>Estimados representantes en este enlace <a  href="http://www.progracademy.org/prg-test/index.php/avance_alumno/'.$id_curso.'/'.$id_seccion.'/'.$id_alumno["ID"].'/0"> http://www.progracademy.org/prg-test/index.php/avance_alumno/'.$id_curso.'/'.$id_seccion.'/'.$id_alumno["ID"].'/0 </a> encontrarán el informe de progreso de su representado '.$id_alumno["NOMBRE"].'. </p> ';
+                            
                             //Titulo
                             $titulo = "Informe de Evaluación a la fecha";
 
                             //cabecera
                             $headers = "MIME-Version: 1.0\r\n"; 
-                            $headers .= "From: progracademy.org\r\n";
-
+                            $headers .= "Content-type: text/html; charset=iso-8859-1\r\n"; 
                             //dirección del remitente 
-                            $headers .= "From: Geeky Theory < tu_dirección_email >\r\n";
+                            $headers .= "From: progracademy.org\r\n";
                             //Enviamos el mensaje a tu_dirección_email 
-                            $bool = mail($info[1], $titulo, $mail, $headers);
+                            //$msg_enviado =  'info[1] '.$info[1].' titulo '.$titulo.' mail '.$mail;	
+							$bool = mail($info[1], $titulo, $mail, $headers);
                             if($bool){
                                 $msg_enviado = "Mensajes enviados";
                             }else{
@@ -1605,8 +1606,8 @@
                      // Envio del correo a la los profesores 
                     else if ($this->session->tipo_envio == 3)
                     {
-                        $rango = $google->ver_rango('1am2wyvFqVMLB7BgFTPZHwZJ3zb3BEjHSg_ZweX5rEfQ', 'profesores');
-                        $profesores = $code->ver_representantes('1am2wyvFqVMLB7BgFTPZHwZJ3zb3BEjHSg_ZweX5rEfQ', 'profesores', $rango);
+                        $rango = $google->ver_rango('1hrI7CnX9smCN_NbNjMuXQm36FMawq3D1c6TqAzXQ11c', 'profesores');
+                        $profesores = $code->ver_representantes('1hrI7CnX9smCN_NbNjMuXQm36FMawq3D1c6TqAzXQ11c', 'profesores', $rango);
                         $alumnos = $code->ver_alumnos($id_curso, $id_seccion);
                         
                         foreach ($profesores as $profesor) 
@@ -1617,7 +1618,7 @@
                                 // echo $profesor[1]."</br>";
                                 // exit;
                                  //Titulo
-                                $mail = ' <p>Estimados representantes en esta dirección <a  href="http://www.progracademy.org/prg-test/index.php/avance_alumno/'.$id_curso.'/'.$id_seccion.'/'.$id.'/0"> link </a> encontrarán el informe de progreso de su representado '.$nombre.'.</p> ';
+                                $mail = ' <p>Estimados profesores en esta dirección <a  href="http://www.progracademy.org/prg-test/index.php/avance_alumno/'.$id_curso.'/'.$id_seccion.'/'.$id.'/0"> link </a> encontrarán el informe de progreso de su representado '.$nombre.'.</p> ';
                                 
                                 $titulo = "Informe de Evaluación a la fecha";
                                 //cabecera
