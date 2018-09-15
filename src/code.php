@@ -12,8 +12,8 @@ class Code
 
     public function Code ()
     {
-        // $this->cone = new Conexion('localhost', 'prg_test', '123456', 'kenshin'); //local
-        $this->cone = new Conexion('localhost', 'prg_test', 'aurora_091', 'kenshin');
+        $this->cone = new Conexion('localhost', 'prg_test', '123456', 'kenshin'); //local
+        // $this->cone = new Conexion('localhost', 'prg_test', 'aurora_091', 'kenshin');
     }
 
     public function cargar ($id_seccion, $hoja_seccion, $rango)
