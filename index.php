@@ -140,6 +140,7 @@
         $escuela_default = null;
         $index_curso = -1;
         $index_seccion = -1;
+        $cursos = null;
 
         if ($this->session->exists('id_pais_default') && $this->session->exists('id_escuela_default'))
         {
@@ -653,6 +654,7 @@
         $index_curso = -1;
         $index_seccion = -1;
         $secciones = null;
+        $cursos = null;
 
         if ($this->session->exists('id_pais_default') && $this->session->exists('id_escuela_default'))
         {
@@ -752,7 +754,7 @@
         $index_curso = -1;
         $index_seccion = -1;
         $secciones = null;
-
+        $cursos = null;
 
         if ($this->session->exists('id_pais_default') && $this->session->exists('id_escuela_default'))
         {
