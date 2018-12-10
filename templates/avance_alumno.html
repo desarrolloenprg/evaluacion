@@ -1,5 +1,6 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -28,34 +29,35 @@
 
         <div class="row">
             <div class="col-md-8">
-               <div class="img_chg"> <img style="margin-top:35px;" class="img-fluid pull-right" src="{{base_url()}}/img/progracademy.png" alt=""></div>
+                <div class="img_chg"> <a target="_blank" href="http://progracademy.org"><img style="margin-top:35px;" class="img-fluid pull-right" src="{{base_url()}}/img/progracademy.png" alt=""></a></div>
             </div>
             <div class="col-md-4">
-                    <div class="img_chg"> <img style="max-height:150px !important;" class="img-fluid pull-right" src="{{base_url()}}/img/ccfa.png" alt=""></div>
+                <div class="img_chg"> <img style="max-height:150px !important;" class="img-fluid pull-right" src="{{base_url()}}/img/ccfa.png" alt=""></div>
             </div>
         </div>
 
         <div class="row">
-            <div class="col-md-12 color-red" style="min-height:120px;padding-top: 10px;">
+            <div class="col-md-12 color-red" style="min-height:120px;padding-top: 0px;">
                 <div class="row">
-                    <div class="col-md-12 color-orange" style="max-height:300px;">
+                    <div class="col-md-12 color-orange" style="padding:0px;">
                         <div class="row">
-                            <div class="col-md-8">                         
-                                <p class="text-title">Informe de avance</p>
+                            <div class="col-md-8">
+                                <!--<p class="text-title">Informe de progreso</p>-->
+                                <p class="text-center pagina-title">Informe de progreso</p>
                             </div>
                             <div class="col-md-4">
-                                    <img id ="ruby_p" style="height:200px; margin-top:-95px;" class="img-fluid pull-left" src="{{base_url()}}/img/ruby.png" alt="">
+                                <!--<img id="ruby_p" style="height:200px; margin-top:-95px" class="img-fluid pull-left" src="{{base_url()}}/img/ruby.png" alt="">-->
+                                <img id="ruby_p" style="height:200px; margin-top:-95px" class="img-fluid pull-left" src="{{base_url()}}/img/Ruby_Armosanchez_V4_Small.png" alt="">
                             </div>
-                    
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="row contenedor-info-semanas color-grey">
-            <div class="col-md-12 " style="min-height:200px;">
-                <div class="form-row">
+        <div class="row contenedor-info-semanas color-grey" style="margin-top:0px;">
+            <div class="col-md-12 " style="min-height:0px;">
+                <div class="form-row" style="margin-top:0px;">
                     <div class="form-group col-md-4">
                         <p class="text-info-alumno pull-right"> <span style="color:#a61c00;">Alumno: </span> {{ alumno.NOMBRE }}</p>
                     </div>
@@ -66,12 +68,60 @@
                         <p class="text-info-alumno pull-left"> <span style="color:#a61c00;">ID: </span> {{ alumno.DNI }} </p>
                     </div>
                 </div>
-
-                <div class="form-row">
-                    <div class="form-group col-md-4 ">
-                        <div class="contendor-resumen pull-right"><p class="text-resumen">Resumen del Avance</p></div>
+                <div class="row" style="margin-top:0px; margin-bottom:10px; padding-left:30px; padding-right:30px;">
+                    <div class="col-md-12">
+                        <p class="text-title-comentario text-center">¿Cómo apoyar a su representado?</p>
+                        <div class="marco-orange">
+                            <p>{{ apoyo }}
+                            <a target="_blank" href={{"https://www.youtube.com/watch?v=0PCRWuPrdDQ"}}>Video 1,   </a> <a target="_blank" href={{"https://www.youtube.com/watch?time_continue=11&v=Fjw9NXIpr7s"}}>Video 2   </a>
+                            </p>
+                        </div>
                     </div>
-                    <div class="form-group col-md-8 div-squad" style="margin-left:auto; margin-right:auto;">
+                </div>
+                <!-- Noticias -->
+                <div class="row" style="margin-top:0px;">
+                    <div class="col-md-12 color-orange" style="padding:5px;">
+                        <h1 class="text-center pagina-title">Novedades Progracademy</h1>
+                    </div>
+                    <div class="col-md-12 color-red" style="max-height:520px">
+                        <section class="regular slider" style="width:90%;margin:0px;padding:10px;height:90%;">
+                            {% for value in noticias  %}
+                            <div>
+                                <a target="_blank" href="{{ value.DIR }}"><img src="{{ value.IMG }}"></a>
+                            </div>
+                            {% endfor %}
+                        </section>
+                    </div>
+                </div>
+                <!--Proyectos-->
+                <div class="row" style="margin-top:0px;">
+                    <div class="col-md-12 color-orange" style="padding:5px;">
+                        <h1 class="text-center pagina-title">Proyectos de su representado</h1>
+                    </div>
+                    <div class="col-md-12 color-grey" style="max-height:520px">
+                        <section class="regular slider" style="width:90%;margin:0px;padding:10px;height:90%;">
+                            {% for value in info_proy  %}
+                            <div>
+                                <a target="_blank" href="{{ value.DIR }}"><img src="{{ value.IMG }}" style="max-width:100%"></a>
+                            </div>
+                            {% endfor %}
+                        </section>
+                    </div>
+                </div>
+
+                <!-- Avance -->
+                <div class="row" style="margin-top:0px;">
+                    <div class="col-md-12 color-red" style="padding:5px;">
+                        <h1 class="text-center pagina-title">Resumen del Avance</h1>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <!--
+        <div class="form-group col-md-4 ">
+            <div class="contendor-resumen pull-right"><p class="text-resumen">Resumen del Avance</p></div>
+        </div>
+        -->
+                    <div class="form-group col-md-12 div-squad" style="margin-left:auto; margin-right:auto;">
                         <div class="contenedor-leyenda">
                             <div class="form-row">
                                 <div class="form-group col-md-4">
@@ -404,22 +454,22 @@
                 <p class="text-title-comentario text-center">Rúbricas</p>
                 <!--  -->
                 <!--
-                <form action="{{ path_for('seleccion_de_proyecto') }}" method="post" id="form-proyectos">
-                    <div class="form-group">
-                        <label for="exampleFormControlSelect1">Seleccione el proyecto</label>
-                        <select class="form-control" id="proyectos" class="proyectos" name="proyectos">
-                            <option value="-1" id="-1">Seleccione una opción</option>
-                            {% for clave, valor  in proyectos %}
-                            {% if clave == index_proyecto %}
-                                <option value="{{clave}}" name="{{clave}}" id="{{clave}}" class="opcion-proyectos" selected>{{ valor }}</option>
-                            {% else %}
-                                <option value="{{clave}}" name="{{clave}}" id="{{clave}}" class="opcion-proyectos">{{ valor }}</option>
-                            {% endif %}
-                            {% endfor %}
-                        </select>
-                    </div>
-                    <input type="text" name="id_proyectos" id="id_proyectos" value="" hidden>
-                </form> -->
+            <form action="{{ path_for('seleccion_de_proyecto') }}" method="post" id="form-proyectos">
+                <div class="form-group">
+                    <label for="exampleFormControlSelect1">Seleccione el proyecto</label>
+                    <select class="form-control" id="proyectos" class="proyectos" name="proyectos">
+                        <option value="-1" id="-1">Seleccione una opci n</option>
+                        {% for clave, valor  in proyectos %}
+                        {% if clave == index_proyecto %}
+                            <option value="{{clave}}" name="{{clave}}" id="{{clave}}" class="opcion-proyectos" selected>{{ valor }}</option>
+                        {% else %}
+                            <option value="{{clave}}" name="{{clave}}" id="{{clave}}" class="opcion-proyectos">{{ valor }}</option>
+                        {% endif %}
+                        {% endfor %}
+                    </select>
+                </div>
+                <input type="text" name="id_proyectos" id="id_proyectos" value="" hidden>
+            </form> -->
                 <!--  -->
 
                 <canvas style="max-width:450px; max-height:450px; margin: 0 auto; float:none;" id="prueba3" width="200" height="200"></canvas>
@@ -505,14 +555,9 @@
             </div>
         </div>
         <!-- !Graficas -->
+        <!-- Comentarios individuales -->
         <div class="row" style="margin-top:30px; padding-left:30px; padding-right:30px;">
-            <div class="col-md-6">
-                <p class="text-title-comentario text-center">¿Cómo apoyar a tu representado?</p>
-                <div class="marco-orange">
-                    <p>{{ apoyo }}</p>
-                </div>
-            </div>
-            <div class="col-md-6">
+            <div class="col-md-12">
                 <p class="text-title-comentario text-center">Comentarios individuales</p>
                 <div class="marco-red">
                     <p>{{ comentario }}</p>
@@ -520,38 +565,6 @@
             </div>
         </div>
 
-        <div class="row" style="margin-top:60px;">
-            <div class="col-md-12 color-red" style="padding:20px;">
-                <h1 class="text-center pagina-title">Proyectos en curso</h1>
-            </div>
-            <div class="col-md-12 color-grey">
-                <section class="regular slider">
-                    {% for value in info_proy  %}
-                    <div>
-                        <a target="_blank" href="{{ value.DIR }}"><img src="{{ value.IMG }}"></a>
-                    </div>
-                    {% endfor %}
-                </section>
-            </div>
-        </div>
-
-        <div class="row" style="margin-top:60px;">
-            <div class="col-md-12 color-orange" style="padding:20px;">
-                <h1 class="text-center pagina-title">Noticias Progracademy</h1>
-            </div>
-            <div class="col-md-12 color-red">
-                <section class="regular slider">
-                    {% for value in noticias  %}
-                    <div>
-                        <a target="_blank" href="{{ value.DIR }}"><img src="{{ value.IMG }}"></a>
-                    </div>
-                    {% endfor %}
-                    <!-- <div>
-                        <a target="_blank" href="http://www.noticierodigital.com/"><img src="http://placehold.it/350x300?text=1"></a>
-                    </div> -->
-                </section>
-            </div>
-        </div>
         <!-- Contact -->
         <section id="contacto">
             <div class="row contenedor-contacto" style="margin-top:60px;">
